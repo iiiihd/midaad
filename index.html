@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#080810">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="مِداد">
+<link rel="manifest" href="/manifest.json">
+<title>مِداد — مولد المحتوى الذكي</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --gold:#C9A84C;
+  --gold2:#E8C96A;
+  --gold-dim:rgba(201,168,76,0.15);
+  --dark:#080810;
+  --dark2:#0E0E1C;
+  --surface:#131325;
+  --card:#191930;
+  --card2:#1F1F3A;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(201,168,76,0.2);
+  --text:#F2F0EC;
+  --text2:#A8A6B8;
+  --text3:#6A6880;
+  --blue:#4F8EF7;
+  --purple:#8B5CF6;
+  --green:#34D399;
+  --red:#F87171;
+}
+
+body{
+  font-family:'Tajawal',sans-serif;
+  background:var(--dark);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* Noise texture overlay */
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:9999;
+  opacity:0.4;
+}
+
+/* Ambient glow */
+.ambient{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(80px);
+  pointer-events:none;
+  z-index:0;
+}
+.ambient-1{width:400px;height:400px;background:rgba(201,168,76,0.06);top:-100px;right:-100px;}
+.ambient-2{width:350px;height:350px;background:rgba(79,142,247,0.05);bottom:-50px;left:-50px;}
+.ambient-3{width:250px;height:250px;background:rgba(139,92,246,0.05);top:50%;left:50%;transform:translate(-50%,-50%);}
+
+/* ===== LOGIN ===== */
+#loginScreen{
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  z-index:100;padding:20px;
+  background:var(--dark);
+}
+
+.login-wrap{
+  width:100%;max-width:390px;
+  position:relative;z-index:1;
+}
+
+.login-top{
+  text-align:center;
+  margin-bottom:32px;
+  animation:slideDown .6s ease;
+}
+
+@keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.login-logo-wrap{
+  width:72px;height:72px;
+  border-radius:20px;
+  background:linear-gradient(135deg,rgba(201,168,76,0.2),rgba(201,168,76,0.05));
+  border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;margin:0 auto 16px;
+  box-shadow:0 0 40px rgba(201,168,76,0.1);
+}
+
+.login-brand{
+  font-size:36px;font-weight:900;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  letter-spacing:3px;
+  margin-bottom:8px;
+}
+
+.login-tag{
+  font-size:13px;color:var(--text2);
+  line-height:1.7;
+}
+
+.login-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:28px;
+  animation:slideUp .6s ease .1s both;
+  position:relative;overflow:hidden;
+}
+
+.login-card::before{
+  content:'';position:absolute;
+  top:0;left:15%;right:15%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+
+.price-strip{
+  background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(139,92,246,0.05));
+  border:1px solid var(--border2);
+  border-radius:16px;
+  padding:18px;
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.price-main{
+  font-size:38px;font-weight:900;
+  color:var(--gold2);
+  line-height:1;margin-bottom:4px;
+}
+
+.price-sub{font-size:12px;color:var(--text3);}
+
+.btn-subscribe{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;
+  background:linear-gradient(135deg,var(--gold),#A07830);
+  color:#080810;
+  border:none;border-radius:14px;
+  padding:15px;
+  font-size:15px;font-weight:800;font-family:inherit;
+  cursor:pointer;text-decoration:none;
+  margin-bottom:16px;
+  transition:all .2s;
+  box-shadow:0 4px 20px rgba(201,168,76,0.2);
+}
+.btn-subscribe:hover{transform:translateY(-1px);box-shadow:0 6px 30px rgba(201,168,76,0.3);}
+
+.divider{
+  display:flex;align-items:center;gap:10px;
+  font-size:11px;color:var(--text3);
+  margin-bottom:14px;
+}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+.code-field{
+  width:100%;
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  padding:13px 16px;
+  font-size:15px;font-family:inherit;
+  color:var(--text);
+  text-align:center;letter-spacing:4px;
+  outline:none;margin-bottom:10px;
+  transition:border-color .2s,box-shadow .2s;
+}
+.code-field::placeholder{letter-spacing:0;color:var(--text3);}
+.code-field:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.1);}
+
+.btn-enter{
+  width:100%;
+  background:var(--card2);
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  padding:13px;
+  font-size:14px;font-weight:700;font-family:inherit;
+  color:var(--text);cursor:pointer;
+  transition:all .2s;
+}
+.btn-enter:hover{border-color:var(--gold);background:rgba(201,168,76,0.05);}
+
+.error-msg{color:var(--red);font-size:12px;margin-top:8px;display:none;text-align:center;}
+
+/* ===== APP ===== */
+#app{display:none;flex-direction:column;min-height:100vh;position:relative;z-index:1;}
+
+/* Header */
+.header{
+  background:rgba(13,13,25,0.9);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:12px 16px;
+  padding-top:max(12px,calc(env(safe-area-inset-top) + 8px));
+  display:flex;align-items:center;gap:12px;
+  position:sticky;top:0;z-index:50;
+}
+
+.h-brand{
+  font-size:22px;font-weight:900;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  letter-spacing:2px;flex:1;
+}
+
+.h-badge{
+  font-size:10px;padding:4px 10px;
+  border-radius:20px;font-weight:700;
+  background:rgba(52,211,153,0.1);
+  border:1px solid rgba(52,211,153,0.3);
+  color:var(--green);
+}
+
+.h-badge.vip{
+  background:rgba(201,168,76,0.1);
+  border-color:rgba(201,168,76,0.3);
+  color:var(--gold);
+}
+
+.btn-logout{
+  background:none;border:1px solid var(--border);
+  border-radius:8px;padding:5px 10px;
+  font-size:11px;color:var(--text3);
+  cursor:pointer;font-family:inherit;
+  transition:all .2s;
+}
+.btn-logout:hover{border-color:var(--red);color:var(--red);}
+
+/* Main */
+main{flex:1;padding:20px 16px 40px;max-width:680px;margin:0 auto;width:100%;}
+
+.section-label{
+  font-size:10px;font-weight:700;
+  color:var(--text3);
+  text-transform:uppercase;letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+/* Platform tabs */
+.platforms{
+  display:flex;gap:6px;
+  overflow-x:auto;padding-bottom:2px;
+  margin-bottom:24px;
+  scrollbar-width:none;
+}
+.platforms::-webkit-scrollbar{display:none;}
+
+.p-btn{
+  flex-shrink:0;
+  padding:8px 14px;
+  border-radius:10px;
+  border:1.5px solid var(--border);
+  background:var(--card);
+  color:var(--text2);
+  font-size:12px;font-weight:700;font-family:inherit;
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:5px;
+  white-space:nowrap;
+}
+.p-btn.active{
+  border-color:var(--gold);
+  background:var(--gold-dim);
+  color:var(--gold2);
+}
+
+/* Content types */
+.types-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;margin-bottom:24px;
+}
+
+.t-card{
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:14px;
+  padding:14px 10px;
+  cursor:pointer;transition:all .2s;
+  text-align:center;
+}
+.t-card:hover,.t-card.active{
+  border-color:var(--gold);
+  background:var(--gold-dim);
+  transform:translateY(-1px);
+}
+.t-icon{font-size:20px;margin-bottom:6px;display:block;}
+.t-name{font-size:12px;font-weight:700;color:var(--text);}
+
+/* Input area */
+.input-box{
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:12px;
+  transition:border-color .2s;
+}
+.input-box:focus-within{border-color:rgba(201,168,76,0.3);}
+
+.field-label{font-size:11px;color:var(--text3);margin-bottom:8px;display:block;font-weight:600;}
+
+.text-field{
+  width:100%;
+  background:rgba(255,255,255,0.03);
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  padding:12px;
+  font-size:13px;font-family:inherit;
+  color:var(--text);outline:none;resize:none;
+  min-height:90px;
+  transition:border-color .2s;line-height:1.7;
+}
+.text-field:focus{border-color:var(--gold);}
+.text-field::placeholder{color:var(--text3);}
+
+/* Count selector */
+.count-row{
+  display:flex;align-items:center;gap:8px;
+  margin-top:12px;
+}
+.count-label{font-size:11px;color:var(--text3);font-weight:600;}
+.count-btns{display:flex;gap:4px;margin-right:auto;}
+.count-btn{
+  width:30px;height:30px;
+  border-radius:8px;
+  border:1.5px solid var(--border);
+  background:var(--card2);
+  color:var(--text2);
+  font-size:12px;font-weight:700;font-family:inherit;
+  cursor:pointer;transition:all .2s;
+}
+.count-btn.active{border-color:var(--gold);background:var(--gold-dim);color:var(--gold);}
+
+/* Tone */
+.tone-row{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;}
+.tone-btn{
+  padding:5px 12px;
+  border-radius:20px;
+  border:1.5px solid var(--border);
+  background:transparent;
+  color:var(--text3);
+  font-size:11px;font-weight:700;font-family:inherit;
+  cursor:pointer;transition:all .2s;
+}
+.tone-btn.active{
+  border-color:var(--purple);
+  background:rgba(139,92,246,0.1);
+  color:#C4B5FD;
+}
+
+/* Generate button */
+.btn-generate{
+  width:100%;
+  background:linear-gradient(135deg,var(--gold),#8A6020);
+  color:#080810;
+  border:none;border-radius:14px;
+  padding:16px;
+  font-size:16px;font-weight:800;font-family:inherit;
+  cursor:pointer;
+  transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 4px 20px rgba(201,168,76,0.2);
+  margin-bottom:24px;
+}
+.btn-generate:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,168,76,0.3);}
+.btn-generate:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none;}
+
+/* Results */
+.result-card{
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:12px;
+  animation:slideUp .4s ease;
+  transition:border-color .2s;
+}
+.result-card:hover{border-color:rgba(201,168,76,0.2);}
+
+.r-header{
+  display:flex;align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+
+.r-num{
+  font-size:10px;font-weight:700;
+  color:var(--gold);
+  background:var(--gold-dim);
+  border:1px solid var(--border2);
+  padding:3px 10px;border-radius:20px;
+}
+
+.r-actions{display:flex;gap:6px;}
+
+.btn-copy{
+  background:var(--card2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:5px 12px;
+  font-size:11px;font-weight:700;font-family:inherit;
+  color:var(--text2);cursor:pointer;
+  transition:all .2s;
+  display:flex;align-items:center;gap:4px;
+}
+.btn-copy:hover{border-color:var(--gold);color:var(--gold);}
+.btn-copy.copied{border-color:var(--green);color:var(--green);}
+
+.r-text{
+  font-size:14px;line-height:1.9;
+  color:var(--text);white-space:pre-wrap;
+}
+
+/* Loading */
+.loading-card{
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:16px;
+  padding:32px;text-align:center;
+}
+.dots{display:flex;gap:6px;justify-content:center;margin-bottom:12px;}
+.dots span{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--gold);
+  animation:bounce 1.2s infinite;
+}
+.dots span:nth-child(2){animation-delay:.2s}
+.dots span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.3}30%{transform:translateY(-10px);opacity:1}}
+.loading-text{font-size:13px;color:var(--text3);}
+
+/* Stats bar */
+.stats-bar{
+  display:flex;gap:8px;
+  margin-bottom:20px;
+}
+.stat-item{
+  flex:1;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  text-align:center;
+}
+.stat-num{font-size:20px;font-weight:800;color:var(--gold2);}
+.stat-label{font-size:10px;color:var(--text3);margin-top:2px;}
+
+</style>
+</head>
+<body>
+
+<div class="ambient ambient-1"></div>
+<div class="ambient ambient-2"></div>
+<div class="ambient ambient-3"></div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-wrap">
+    <div class="login-top">
+      <div class="login-logo-wrap">🖋️</div>
+      <div class="login-brand">مِداد</div>
+      <p class="login-tag">مولد المحتوى العربي الذكي<br>لمنصات التواصل الاجتماعي</p>
+    </div>
+
+    <div class="login-card">
+      <div class="price-strip">
+        <div class="price-main">$9.99</div>
+        <div class="price-sub">اشتراك شهري — محتوى لا محدود ✨</div>
+      </div>
+
+      <a href="https://student-assistant.lemonsqueezy.com/checkout/buy/c01b1b35-d785-41a0-b52d-e4e7bf51d728?locale=en" target="_blank" class="btn-subscribe">
+        ✨ اشترك الآن واحصل على كودك
+      </a>
+
+      <div class="divider">لديك كود دخول؟</div>
+
+      <input type="text" id="codeInput" class="code-field" placeholder="أدخل كود الدخول" maxlength="10" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+      <button class="btn-enter" onclick="checkCode()">دخول ←</button>
+      <p class="error-msg" id="errorMsg">❌ كود غير صحيح، تأكد وحاول مرة أخرى</p>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="header">
+    <div class="h-brand">مِداد</div>
+    <div class="h-badge" id="timerBadge">✅ نشط</div>
+    <button class="btn-logout" onclick="logout()">خروج</button>
+  </div>
+
+  <main>
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-num" id="statGenerated">0</div>
+        <div class="stat-label">محتوى تم توليده</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="statPlatform">📸</div>
+        <div class="stat-label">المنصة الحالية</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="statToday">0</div>
+        <div class="stat-label">اليوم</div>
+      </div>
+    </div>
+
+    <!-- Platform -->
+    <div class="section-label">المنصة</div>
+    <div class="platforms">
+      <button class="p-btn active" onclick="setPlatform(this,'انستقرام','📸')">📸 انستقرام</button>
+      <button class="p-btn" onclick="setPlatform(this,'تيك توك','🎵')">🎵 تيك توك</button>
+      <button class="p-btn" onclick="setPlatform(this,'تويتر','𝕏')">𝕏 تويتر</button>
+      <button class="p-btn" onclick="setPlatform(this,'واتساب','💬')">💬 واتساب</button>
+      <button class="p-btn" onclick="setPlatform(this,'لينكدإن','💼')">💼 لينكدإن</button>
+      <button class="p-btn" onclick="setPlatform(this,'سناب شات','👻')">👻 سناب</button>
+    </div>
+
+    <!-- Content Type -->
+    <div class="section-label">نوع المحتوى</div>
+    <div class="types-grid">
+      <div class="t-card active" onclick="setType(this,'بوست')">
+        <span class="t-icon">📝</span>
+        <div class="t-name">بوست</div>
+      </div>
+      <div class="t-card" onclick="setType(this,'كابشن للصورة')">
+        <span class="t-icon">🖼️</span>
+        <div class="t-name">كابشن</div>
+      </div>
+      <div class="t-card" onclick="setType(this,'إعلان ترويجي')">
+        <span class="t-icon">📢</span>
+        <div class="t-name">إعلان</div>
+      </div>
+      <div class="t-card" onclick="setType(this,'رد على تعليق')">
+        <span class="t-icon">💬</span>
+        <div class="t-name">رد تعليق</div>
+      </div>
+      <div class="t-card" onclick="setType(this,'قصة / ستوري')">
+        <span class="t-icon">✨</span>
+        <div class="t-name">ستوري</div>
+      </div>
+      <div class="t-card" onclick="setType(this,'هاشتاقات')">
+        <span class="t-icon">#️⃣</span>
+        <div class="t-name">هاشتاقات</div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-box">
+      <label class="field-label">صف منتجك أو خدمتك أو موضوعك</label>
+      <textarea class="text-field" id="topicInput" placeholder="مثال: متجر عبايات فاخرة، عرض خاص خصم 30% على جميع التشكيلات الجديدة لهذا الموسم..." rows="3"></textarea>
+
+      <div class="count-row">
+        <span class="count-label">عدد النسخ:</span>
+        <div class="count-btns">
+          <button class="count-btn active" onclick="setCount(this,1)">1</button>
+          <button class="count-btn" onclick="setCount(this,2)">2</button>
+          <button class="count-btn" onclick="setCount(this,3)">3</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="field-label" style="margin-top:12px;">أسلوب الكتابة</label>
+        <div class="tone-row">
+          <button class="tone-btn active" onclick="setTone(this,'احترافي')">احترافي</button>
+          <button class="tone-btn" onclick="setTone(this,'ودي ومحبب')">ودي</button>
+          <button class="tone-btn" onclick="setTone(this,'مرح وخفيف')">مرح</button>
+          <button class="tone-btn" onclick="setTone(this,'مقنع وبيعي')">مقنع</button>
+          <button class="tone-btn" onclick="setTone(this,'عاطفي وملهم')">ملهم</button>
+          <button class="tone-btn" onclick="setTone(this,'فخم وراقي')">فخم</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-generate" id="generateBtn" onclick="generate()">
+      ✨ ولّد المحتوى الآن
+    </button>
+
+    <div id="results"></div>
+  </main>
+</div>
+
+<script>
+let platform = 'انستقرام';
+let platformIcon = '📸';
+let contentType = 'بوست';
+let tone = 'احترافي';
+let count = 1;
+let totalGenerated = parseInt(localStorage.getItem('midaad_total') || '0');
+let todayGenerated = parseInt(localStorage.getItem('midaad_today') || '0');
+
+function setPlatform(el, p, icon) {
+  document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  platform = p;
+  platformIcon = icon;
+  document.getElementById('statPlatform').textContent = icon;
+}
+
+function setType(el, t) {
+  document.querySelectorAll('.t-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  contentType = t;
+}
+
+function setTone(el, t) {
+  document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  tone = t;
+}
+
+function setCount(el, n) {
+  document.querySelectorAll('.count-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  count = n;
+}
+
+function getDeviceId() {
+  let id = localStorage.getItem('midaad_device');
+  if (!id) {
+    id = 'M-' + Math.random().toString(36).substr(2,9).toUpperCase();
+    localStorage.setItem('midaad_device', id);
+  }
+  return id;
+}
+
+async function checkCode() {
+  const code = document.getElementById('codeInput').value.trim().toUpperCase();
+  const errorMsg = document.getElementById('errorMsg');
+  const btn = document.querySelector('.btn-enter');
+  if (!code) return;
+
+  btn.textContent = 'جاري التحقق...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, deviceId: getDeviceId() })
+    });
+    const data = await res.json();
+
+    if (data.valid) {
+      localStorage.setItem('midaad_code', code);
+      localStorage.setItem('midaad_type', data.type || 'monthly');
+      localStorage.setItem('midaad_expiry', data.expiry || '0');
+      showApp();
+    } else if (data.reason === 'device') {
+      errorMsg.textContent = '⛔ الكود مرتبط بجهاز آخر';
+      errorMsg.style.display = 'block';
+    } else if (data.reason === 'expired') {
+      errorMsg.textContent = '⏰ انتهى اشتراكك، جدد الآن';
+      errorMsg.style.display = 'block';
+    } else {
+      errorMsg.textContent = '❌ كود غير صحيح، تأكد وحاول مرة أخرى';
+      errorMsg.style.display = 'block';
+    }
+  } catch(e) {
+    errorMsg.textContent = '❌ خطأ في الاتصال';
+    errorMsg.style.display = 'block';
+  }
+
+  btn.textContent = 'دخول ←';
+  btn.disabled = false;
+}
+
+function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('app').style.flexDirection = 'column';
+  updateBadge();
+  updateStats();
+}
+
+function updateBadge() {
+  const type = localStorage.getItem('midaad_type');
+  const expiry = parseInt(localStorage.getItem('midaad_expiry') || '0');
+  const badge = document.getElementById('timerBadge');
+
+  if (type === 'vip') {
+    badge.textContent = '⭐ دائم';
+    badge.className = 'h-badge vip';
+    return;
+  }
+
+  if (expiry > 0) {
+    const days = Math.floor((expiry - Date.now()) / (1000 * 60 * 60 * 24));
+    if (days > 3) {
+      badge.textContent = `✅ ${days} يوم`;
+      badge.className = 'h-badge';
+    } else if (days > 0) {
+      badge.textContent = `⚠️ ${days} يوم فقط`;
+      badge.className = 'h-badge';
+      badge.style.borderColor = 'rgba(251,191,36,0.3)';
+      badge.style.color = '#FCD34D';
+      badge.style.background = 'rgba(251,191,36,0.1)';
+    } else {
+      badge.textContent = '❌ منتهي';
+      badge.className = 'h-badge';
+      badge.style.borderColor = 'rgba(248,113,113,0.3)';
+      badge.style.color = 'var(--red)';
+      badge.style.background = 'rgba(248,113,113,0.1)';
+    }
+  }
+}
+
+function updateStats() {
+  document.getElementById('statGenerated').textContent = totalGenerated;
+  document.getElementById('statToday').textContent = todayGenerated;
+  document.getElementById('statPlatform').textContent = platformIcon;
+}
+
+function logout() {
+  localStorage.removeItem('midaad_code');
+  localStorage.removeItem('midaad_type');
+  localStorage.removeItem('midaad_expiry');
+  location.reload();
+}
+
+async function generate() {
+  const topic = document.getElementById('topicInput').value.trim();
+  if (!topic) { alert('أدخل وصف منتجك أو موضوعك أولاً!'); return; }
+
+  const btn = document.getElementById('generateBtn');
+  const results = document.getElementById('results');
+
+  btn.disabled = true;
+  btn.innerHTML = '⏳ مِداد يكتب لك...';
+
+  results.innerHTML = `
+    <div class="loading-card">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="loading-text">جاري توليد محتوى مميز لـ ${platform}...</div>
+    </div>`;
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topic, platform, contentType, tone, count,
+        code: localStorage.getItem('midaad_code'),
+        deviceId: getDeviceId()
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.error) {
+      results.innerHTML = `<div class="result-card"><div class="r-text" style="color:var(--red)">❌ ${data.error}</div></div>`;
+    } else {
+      results.innerHTML = data.results.map((text, i) => `
+        <div class="result-card">
+          <div class="r-header">
+            <span class="r-num">النسخة ${i + 1}</span>
+            <div class="r-actions">
+              <button class="btn-copy" onclick="copyText(this, 'r${i}')">📋 نسخ</button>
+            </div>
+          </div>
+          <div class="r-text" id="r${i}">${text.trim()}</div>
+        </div>
+      `).join('');
+
+      totalGenerated += data.results.length;
+      todayGenerated += data.results.length;
+      localStorage.setItem('midaad_total', totalGenerated);
+      localStorage.setItem('midaad_today', todayGenerated);
+      updateStats();
+    }
+  } catch(e) {
+    results.innerHTML = `<div class="result-card"><div class="r-text" style="color:var(--red)">❌ خطأ في الاتصال، حاول مرة أخرى</div></div>`;
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '✨ ولّد المحتوى الآن';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function copyText(btn, id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText).then(() => {
+    btn.textContent = '✅ تم';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 نسخ';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('midaad_code')) showApp();
+  document.getElementById('codeInput')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkCode();
+  });
+});
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js');
+}
+</script>
+</body>
+</html>
