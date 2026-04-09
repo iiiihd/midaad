@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   const { code, deviceId } = req.body;
   const KV_URL = process.env.KV_REST_API_URL;
   const KV_TOKEN = process.env.KV_REST_API_TOKEN;
-  const VIP_CODES = new Set(['AH80','AH23','SKY77','GEM55','ADEL23','KSH23']);
+  const VIP_CODES = new Set(['AH80','AH23','SKY77','GEM55','ADEL23','KSH23','MDVIP80']);
 
   async function kvGet(key) {
     try {
