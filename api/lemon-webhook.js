@@ -72,7 +72,7 @@ export default async function handler(req, res) {
         'api-key': BREVO_KEY
       },
       body: JSON.stringify({
-        sender: { name: 'مِداد', email: 'noreply@midaad.vercel.app' },
+        sender: { name: 'مِداد', email: 'midaad.app@gmail.com' },
         to: [{ email: toEmail, name: toName || 'عزيزي العميل' }],
         subject: '🖋️ كود دخول مِداد — ابدأ الآن!',
         htmlContent: html
