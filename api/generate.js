@@ -22,6 +22,14 @@ export default async function handler(req, res) {
     } catch(e) { return null; }
   }
 
+  async function kvSet(key, value, expirySeconds) {
+    try {
+      let url = `${KV_URL}/set/${encodeURIComponent(key)}/${encodeURIComponent(value)}`;
+      if (expirySeconds) url += `/ex/${expirySeconds}`;
+      await fetch(url, { headers: { Authorization: `Bearer ${KV_TOKEN}` } });
+    } catch(e) {}
+  }
+
   // Verify code
   if (!VIP_CODES.has(code?.toUpperCase())) {
     const valid = await kvGet('valid_' + code);
@@ -36,6 +44,16 @@ export default async function handler(req, res) {
     if (savedDevice && savedDevice !== deviceId) {
       return res.status(401).json({ error: 'الكود مرتبط بجهاز آخر' });
     }
+
+    // Daily limit check
+    const today = new Date().toISOString().slice(0,10);
+    const dailyKey = `daily_${code}_${today}`;
+    const dailyCount = parseInt(await kvGet(dailyKey) || '0');
+    const numVersions = Math.min(parseInt(count) || 1, 3);
+    if (dailyCount + numVersions > 30) {
+      return res.status(429).json({ error: `⏰ وصلت للحد اليومي (30 توليد). عد غداً!` });
+    }
+    await kvSet(dailyKey, String(dailyCount + numVersions), 86400);
   }
 
   if (!topic) return res.status(400).json({ error: 'أدخل موضوعك أولاً' });
