@@ -10,7 +10,8 @@ export default async function handler(req, res) {
   const KV_URL = process.env.KV_REST_API_URL;
   const KV_TOKEN = process.env.KV_REST_API_TOKEN;
   const OPENAI_KEY = process.env.OPENAI_API_KEY;
-  const VIP_CODES = new Set(['AH80','AH23','SKY77','GEM55','ADEL23','KSH23','MDVIP80']);
+  const VIP_CODES = new Set(['AH80','KSH23','MDVIP80']);
+  const DAILY_LIMIT = 50;
 
   async function kvGet(key) {
     try {
@@ -30,7 +31,17 @@ export default async function handler(req, res) {
     } catch(e) {}
   }
 
-  // Verify code
+  // Daily limit check for all users including VIP
+  const today = new Date().toISOString().slice(0,10);
+  const dailyKey = `daily_${code}_${today}`;
+  const dailyCount = parseInt(await kvGet(dailyKey) || '0');
+  const numVersions = Math.min(parseInt(count) || 1, 3);
+  if (dailyCount + numVersions > DAILY_LIMIT) {
+    return res.status(429).json({ error: `⏰ وصلت للحد اليومي (${DAILY_LIMIT} توليد). عد غداً!` });
+  }
+  await kvSet(dailyKey, String(dailyCount + numVersions), 86400);
+
+  // Verify code for non-VIP
   if (!VIP_CODES.has(code?.toUpperCase())) {
     const valid = await kvGet('valid_' + code);
     if (!valid) return res.status(401).json({ error: 'كود غير صحيح' });
