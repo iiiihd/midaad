@@ -68,7 +68,25 @@ body::after{
   position:fixed;inset:0;
   display:flex;align-items:center;justify-content:center;
   z-index:100;padding:20px;
-  background:var(--dark);
+  background:linear-gradient(135deg, #050a30 0%, #0E0E1C 50%, #1a1000 100%);
+}
+
+@media (prefers-color-scheme: light) {
+  #loginScreen {
+    background:linear-gradient(135deg, #1a2060 0%, #2a2a5a 50%, #3a2800 100%);
+  }
+  .login-card {
+    background:#ffffff !important;
+    border-color:rgba(201,168,76,0.3) !important;
+  }
+  .code-field {
+    background:#f5f5f5 !important;
+    color:#0E0E1C !important;
+  }
+  .btn-enter {
+    background:#f0f0f0 !important;
+    color:#0E0E1C !important;
+  }
 }
 
 .login-wrap{
@@ -470,7 +488,7 @@ main{flex:1;padding:20px 16px 40px;max-width:680px;margin:0 auto;width:100%;}
 <div id="loginScreen">
   <div class="login-wrap">
     <div class="login-top">
-      <img src="/logo.png" alt="مِداد" style="width:140px;height:140px;object-fit:contain;margin:0 auto 16px;display:block;border-radius:24px;">
+      <img src="https://raw.githubusercontent.com/iiiihd/midaad/main/logo.png" alt="مِداد" style="width:140px;height:140px;object-fit:contain;margin:0 auto 16px;display:block;border-radius:24px;">
       <p class="login-tag">مولد المحتوى العربي الذكي<br>لمنصات التواصل الاجتماعي</p>
     </div>
 
