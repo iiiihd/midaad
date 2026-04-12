@@ -75,28 +75,41 @@ body::after{
   #loginScreen {
     background:linear-gradient(135deg, #1a2060 0%, #2a2a5a 50%, #3a2800 100%);
   }
+  .login-tag {
+    color:#ffffff !important;
+    text-shadow:0 1px 4px rgba(0,0,0,0.6) !important;
+  }
   .login-card {
     background:#ffffff !important;
     border-color:rgba(201,168,76,0.3) !important;
   }
-  .login-tag {
-    color:#333 !important;
+  .price-main {
+    color:#050a30 !important;
+    -webkit-text-fill-color:#050a30 !important;
+  }
+  .price-sub {
+    color:#050a30 !important;
+  }
+  .divider {
+    color:#050a30 !important;
   }
   .code-field {
     background:#f5f5f5 !important;
-    color:#0E0E1C !important;
-    border-color:rgba(0,0,0,0.15) !important;
+    color:#050a30 !important;
+    border-color:rgba(5,10,48,0.2) !important;
   }
   .btn-enter {
     background:#f0f0f0 !important;
-    color:#0E0E1C !important;
-    border-color:rgba(0,0,0,0.15) !important;
+    color:#050a30 !important;
+    border-color:rgba(5,10,48,0.2) !important;
   }
-  .divider {
-    color:#555 !important;
+  .error-msg {
+    color:#050a30 !important;
   }
-  .price-sub {
-    color:#555 !important;
+  .spam-notice {
+    color:#050a30 !important;
+    border-color:rgba(5,10,48,0.2) !important;
+    background:rgba(5,10,48,0.05) !important;
   }
 }
 
@@ -519,7 +532,7 @@ main{flex:1;padding:20px 16px 40px;max-width:680px;margin:0 auto;width:100%;}
       <input type="text" id="codeInput" class="code-field" placeholder="أدخل كود الدخول" maxlength="10" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
       <button class="btn-enter" onclick="checkCode()">دخول ←</button>
       <p class="error-msg" id="errorMsg">❌ كود غير صحيح، تأكد وحاول مرة أخرى</p>
-      <div style="margin-top:14px;padding:10px 14px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);border-radius:10px;font-size:11px;color:#FCD34D;line-height:1.7;text-align:right;font-weight:600;">
+      <div style="margin-top:14px;padding:10px 14px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);border-radius:10px;font-size:11px;color:#FCD34D;line-height:1.7;text-align:right;font-weight:600;" class="spam-notice">
         📧 بعد الدفع سيصلك الكود على إيميلك<br>
         إذا لم تجده، تحقق من مجلد <b>البريد غير الهام / Spam</b>
       </div>
