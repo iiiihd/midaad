@@ -31,45 +31,37 @@ export default async function handler(req, res) {
     } catch(e) {}
   }
 
-  // Daily limit check for all users including VIP
-  const today = new Date().toISOString().slice(0,10);
-  const dailyKey = `daily_${code}_${today}`;
-  const dailyCount = parseInt(await kvGet(dailyKey) || '0');
-  const numVersions = Math.min(parseInt(count) || 1, 3);
-  if (dailyCount + numVersions > DAILY_LIMIT) {
-    return res.status(429).json({ error: `⏰ وصلت للحد اليومي (${DAILY_LIMIT} توليد). عد غداً!` });
-  }
-  await kvSet(dailyKey, String(dailyCount + numVersions), 86400);
+  const upperCode = code?.toUpperCase();
+  const isVIP = VIP_CODES.has(upperCode);
 
   // Verify code for non-VIP
-  if (!VIP_CODES.has(code?.toUpperCase())) {
-    const valid = await kvGet('valid_' + code);
+  if (!isVIP) {
+    const valid = await kvGet('valid_' + upperCode);
     if (!valid) return res.status(401).json({ error: 'كود غير صحيح' });
 
-    const expiry = parseInt(await kvGet('exp_' + code) || '0');
+    const expiry = parseInt(await kvGet('exp_' + upperCode) || '0');
     if (expiry > 0 && Date.now() > expiry) {
       return res.status(401).json({ error: 'انتهى اشتراكك، جدد الآن' });
     }
 
-    const savedDevice = await kvGet('dev_' + code);
+    const savedDevice = await kvGet('dev_' + upperCode);
     if (savedDevice && savedDevice !== deviceId) {
       return res.status(401).json({ error: 'الكود مرتبط بجهاز آخر' });
     }
-
-    // Daily limit check
-    const today = new Date().toISOString().slice(0,10);
-    const dailyKey = `daily_${code}_${today}`;
-    const dailyCount = parseInt(await kvGet(dailyKey) || '0');
-    const numVersions = Math.min(parseInt(count) || 1, 3);
-    if (dailyCount + numVersions > 30) {
-      return res.status(429).json({ error: `⏰ وصلت للحد اليومي (30 توليد). عد غداً!` });
-    }
-    await kvSet(dailyKey, String(dailyCount + numVersions), 86400);
   }
 
-  if (!topic) return res.status(400).json({ error: 'أدخل موضوعك أولاً' });
-
+  // Daily limit check for all users including VIP
   const numVersions = Math.min(parseInt(count) || 1, 3);
+  const today = new Date().toISOString().slice(0,10);
+  const dailyKey = `daily_${upperCode}_${today}`;
+  const dailyCount = parseInt(await kvGet(dailyKey) || '0');
+  const limit = isVIP ? DAILY_LIMIT : 30;
+  if (dailyCount + numVersions > limit) {
+    return res.status(429).json({ error: `⏰ وصلت للحد اليومي (${limit} توليد). عد غداً!` });
+  }
+  await kvSet(dailyKey, String(dailyCount + numVersions), 86400);
+
+  if (!topic) return res.status(400).json({ error: 'أدخل موضوعك أولاً' });
 
   const twitterNote = platform === 'تويتر' ? 'كل نسخة يجب ألا تتجاوز 280 حرف.' : '';
   const hashtagNote = contentType === 'هاشتاقات' ? 'اكتب 15-20 هاشتاق مناسبة ومتنوعة.' : '';
