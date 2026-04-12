@@ -3,7 +3,8 @@ export default async function handler(req, res) {
 
   const KV_URL = process.env.KV_REST_API_URL;
   const KV_TOKEN = process.env.KV_REST_API_TOKEN;
-  const BREVO_KEY = process.env.BREVO_API_KEY;
+  const MAILJET_KEY = process.env.MAILJET_API_KEY;
+  const MAILJET_SECRET = process.env.MAILJET_SECRET_KEY;
 
   const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
@@ -44,16 +45,11 @@ export default async function handler(req, res) {
       <div style="padding:32px;text-align:center;">
         <h2 style="font-size:20px;color:#F2F0EC;margin-bottom:8px;">✅ تم الدفع بنجاح!</h2>
         <p style="font-size:14px;color:#A8A6B8;margin-bottom:24px;">أهلاً ${toName}! كود دخولك جاهز 🎉</p>
-        
         <div style="background:#1E1E35;border:2px solid rgba(201,168,76,0.4);border-radius:16px;padding:24px;margin-bottom:24px;">
           <div style="font-size:12px;color:#A8A6B8;margin-bottom:8px;">كود الدخول الخاص بك</div>
           <div style="font-size:32px;font-weight:900;color:#E8C96A;letter-spacing:6px;">${code}</div>
         </div>
-
-        <a href="https://midaad.vercel.app" style="display:inline-block;background:linear-gradient(135deg,#C9A84C,#A07830);color:#080810;text-decoration:none;border-radius:12px;padding:14px 32px;font-size:15px;font-weight:800;">
-          افتح مِداد الآن ←
-        </a>
-
+        <a href="https://midaad.vercel.app" style="display:inline-block;background:linear-gradient(135deg,#C9A84C,#A07830);color:#080810;text-decoration:none;border-radius:12px;padding:14px 32px;font-size:15px;font-weight:800;">افتح مِداد الآن ←</a>
         <div style="margin-top:24px;padding:16px;background:#131325;border-radius:12px;text-align:right;">
           <p style="font-size:12px;color:#A8A6B8;margin-bottom:6px;">⚠️ الكود يعمل على جهاز واحد فقط</p>
           <p style="font-size:12px;color:#A8A6B8;margin-bottom:6px;">⏰ مدة الاشتراك: 30 يوم</p>
@@ -65,17 +61,20 @@ export default async function handler(req, res) {
       </div>
     </div>`;
 
-    await fetch('https://api.brevo.com/v3/smtp/email', {
+    const auth = Buffer.from(`${MAILJET_KEY}:${MAILJET_SECRET}`).toString('base64');
+    await fetch('https://api.mailjet.com/v3.1/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'api-key': BREVO_KEY
+        'Authorization': `Basic ${auth}`
       },
       body: JSON.stringify({
-        sender: { name: 'مِداد', email: 'midaad.app@gmail.com' },
-        to: [{ email: toEmail, name: toName || 'عزيزي العميل' }],
-        subject: '🖋️ كود دخول مِداد — ابدأ الآن!',
-        htmlContent: html
+        Messages: [{
+          From: { Email: 'midaad.app@gmail.com', Name: 'مِداد' },
+          To: [{ Email: toEmail, Name: toName || 'عزيزي العميل' }],
+          Subject: '🖋️ كود دخول مِداد — ابدأ الآن!',
+          HTMLPart: html
+        }]
       })
     });
   }
