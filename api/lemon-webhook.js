@@ -44,7 +44,8 @@ export default async function handler(req, res) {
       </div>
       <div style="padding:32px;text-align:center;">
         <h2 style="font-size:20px;color:#F2F0EC;margin-bottom:8px;">✅ تم الدفع بنجاح!</h2>
-        <p style="font-size:14px;color:#A8A6B8;margin-bottom:24px;">أهلاً ${toName}! كود دخولك جاهز 🎉</p>
+        <p style="font-size:14px;color:#A8A6B8;margin-bottom:8px;">أهلاً ${toName}! كود دخولك جاهز 🎉</p>
+        <p style="font-size:12px;background:#2A1A00;border:1px solid #F59E0B;border-radius:8px;padding:8px;color:#FCD34D;margin-bottom:16px;">⚠️ إذا لم تجد هذا الإيميل، تحقق من مجلد <b>البريد غير الهام / Spam</b></p>
         <div style="background:#1E1E35;border:2px solid rgba(201,168,76,0.4);border-radius:16px;padding:24px;margin-bottom:24px;">
           <div style="font-size:12px;color:#A8A6B8;margin-bottom:8px;">كود الدخول الخاص بك</div>
           <div style="font-size:32px;font-weight:900;color:#E8C96A;letter-spacing:6px;">${code}</div>
