@@ -531,9 +531,9 @@ main{flex:1;padding:20px 16px 40px;max-width:680px;margin:0 auto;width:100%;}
         <div class="price-sub">اشتراك شهري — محتوى لا محدود ✨</div>
       </div>
 
-      <a href="https://student-assistant.lemonsqueezy.com/checkout/buy/b4bf3efb-af6c-4e18-975c-d5425eb2b341?locale=en" target="_blank" class="btn-subscribe">
+      <button onclick="openPaddleCheckout()" class="btn-subscribe">
         ✨ اشترك الآن واحصل على كودك
-      </a>
+      </button>
 
       <div class="divider">لديك كود دخول؟</div>
 
@@ -950,6 +950,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/service-worker.js');
+}
+</script>
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  Paddle.Initialize({
+    token: 'live_d8a82b35252d9d828dd81fe3ff0'
+  });
+});
+
+function openPaddleCheckout() {
+  Paddle.Checkout.open({
+    items: [{ priceId: 'pri_01kpgyf5nvhx060t5xzsn9zp7j', quantity: 1 }]
+  });
 }
 </script>
 </body>
