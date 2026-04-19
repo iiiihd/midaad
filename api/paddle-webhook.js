@@ -5,6 +5,7 @@ export default async function handler(req, res) {
   const KV_TOKEN = process.env.KV_REST_API_TOKEN;
   const MAILJET_KEY = process.env.MAILJET_API_KEY;
   const MAILJET_SECRET = process.env.MAILJET_SECRET_KEY;
+  const PADDLE_API_KEY = process.env.PADDLE_API_KEY;
 
   const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
@@ -14,6 +15,16 @@ export default async function handler(req, res) {
       code += CHARS[Math.floor(Math.random() * CHARS.length)];
     }
     return code;
+  }
+
+  async function getCustomerEmail(customerId) {
+    try {
+      const r = await fetch(`https://api.paddle.com/customers/${customerId}`, {
+        headers: { Authorization: `Bearer ${PADDLE_API_KEY}` }
+      });
+      const d = await r.json();
+      return { email: d?.data?.email || '', name: d?.data?.name || '' };
+    } catch(e) { return { email: '', name: '' }; }
   }
 
   async function kvGet(key) {
@@ -84,13 +95,21 @@ export default async function handler(req, res) {
     const eventType = body?.event_type || '';
     console.log('Paddle event:', eventType);
     console.log('Paddle data:', JSON.stringify(body?.data)?.substring(0, 500));
+    console.log('Customer:', JSON.stringify(body?.data?.customer));
+    console.log('Full body keys:', Object.keys(body || {}).join(','));
 
     if (eventType === 'subscription.created' || eventType === 'transaction.completed') {
-      const userEmail = body?.data?.customer?.email 
-        || body?.data?.address?.first_line
-        || body?.notification?.payload?.customer?.email
-        || '';
-      const userName = body?.data?.customer?.name || body?.data?.customer?.id || '';
+      const customerId = body?.data?.customer_id || body?.data?.customer?.id || '';
+      let userEmail = body?.data?.customer?.email || '';
+      let userName = body?.data?.customer?.name || '';
+
+      if (!userEmail && customerId) {
+        const customer = await getCustomerEmail(customerId);
+        userEmail = customer.email;
+        userName = customer.name;
+      }
+
+      console.log('Customer ID:', customerId, 'Email:', userEmail);
       const subscriptionId = body?.data?.id || '';
 
       if (userEmail) {
