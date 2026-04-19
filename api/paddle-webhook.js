@@ -87,8 +87,8 @@ export default async function handler(req, res) {
 
     if (eventType === 'subscription.created' || eventType === 'transaction.completed') {
       const userEmail = body?.data?.customer?.email 
-        || body?.data?.customer_id 
-        || body?.data?.items?.[0]?.price?.custom_data?.email 
+        || body?.data?.address?.first_line
+        || body?.notification?.payload?.customer?.email
         || '';
       const userName = body?.data?.customer?.name || body?.data?.customer?.id || '';
       const subscriptionId = body?.data?.id || '';
