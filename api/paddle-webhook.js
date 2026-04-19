@@ -83,10 +83,14 @@ export default async function handler(req, res) {
     const body = req.body;
     const eventType = body?.event_type || '';
     console.log('Paddle event:', eventType);
+    console.log('Paddle data:', JSON.stringify(body?.data)?.substring(0, 500));
 
     if (eventType === 'subscription.created' || eventType === 'transaction.completed') {
-      const userEmail = body?.data?.customer?.email || body?.data?.items?.[0]?.price?.custom_data?.email || '';
-      const userName = body?.data?.customer?.name || '';
+      const userEmail = body?.data?.customer?.email 
+        || body?.data?.customer_id 
+        || body?.data?.items?.[0]?.price?.custom_data?.email 
+        || '';
+      const userName = body?.data?.customer?.name || body?.data?.customer?.id || '';
       const subscriptionId = body?.data?.id || '';
 
       if (userEmail) {
