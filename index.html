@@ -944,6 +944,21 @@ function showApp() {
   document.getElementById('app').style.flexDirection = 'column';
   updateBadge();
   updateStats();
+
+  const logoutBtn = document.querySelector('.btn-logout');
+  if (logoutBtn) {
+    if (localStorage.getItem('midaad_code')) {
+      logoutBtn.textContent = 'خروج';
+      logoutBtn.style.borderColor = '';
+      logoutBtn.style.color = '';
+      logoutBtn.onclick = logout;
+    } else {
+      logoutBtn.textContent = 'اشترك';
+      logoutBtn.style.borderColor = 'var(--gold)';
+      logoutBtn.style.color = 'var(--gold)';
+      logoutBtn.onclick = showSubscribePopup;
+    }
+  }
 }
 
 function updateBadge() {
@@ -1086,36 +1101,25 @@ function copyText(btn, id) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (localStorage.getItem('midaad_code')) {
-    showApp();
-  } else {
-    // دخول مباشر للتجربة المجانية
+  const savedCode = localStorage.getItem('midaad_code');
+  showApp();
+
+  if (!savedCode) {
     const freeUsed = parseInt(localStorage.getItem('midaad_free_used') || '0');
-    showApp();
-    // أظهر شارة التجربة المجانية
-    if (!localStorage.getItem('midaad_code')) {
-      const badge = document.getElementById('timerBadge');
-      if (badge) {
-        badge.textContent = `🎁 ${3 - freeUsed} مجاناً`;
-        badge.className = 'h-badge';
-        badge.style.background = 'rgba(52,211,153,0.1)';
-        badge.style.borderColor = 'rgba(52,211,153,0.3)';
-        badge.style.color = '#34D399';
-      }
-      // أخفي زر الخروج وبدله بزر الاشتراك فقط لو ما عنده كود
-      const logoutBtn = document.querySelector('.btn-logout');
-      if (logoutBtn && !localStorage.getItem('midaad_code')) {
-        logoutBtn.textContent = 'اشترك';
-        logoutBtn.style.borderColor = 'var(--gold)';
-        logoutBtn.style.color = 'var(--gold)';
-        logoutBtn.onclick = showSubscribePopup;
-      }
+    const badge = document.getElementById('timerBadge');
+    if (badge) {
+      const remaining = Math.max(0, 3 - freeUsed);
+      badge.textContent = remaining > 0 ? `🎁 ${remaining} مجاناً` : '🔒 انتهت';
+      badge.style.background = 'rgba(52,211,153,0.1)';
+      badge.style.borderColor = 'rgba(52,211,153,0.3)';
+      badge.style.color = '#34D399';
     }
   }
+
   document.getElementById('codeInput')?.addEventListener('keydown', e => {
     if (e.key === 'Enter') checkCode();
   });
-  // أضف مثال جاهز في الخانة
+
   const topicInput = document.getElementById('topicInput');
   if (topicInput && !topicInput.value) {
     topicInput.placeholder = 'مثال: متجر عبايات فاخرة، خصم 30% على جميع التشكيلات الجديدة لهذا الموسم...';
@@ -1203,6 +1207,14 @@ async function checkCodeFromPopup() {
       localStorage.setItem('midaad_type', data.type || 'monthly');
       localStorage.setItem('midaad_expiry', data.expiry || '0');
       hideSubscribePopup();
+      // حدّث زر الخروج
+      const logoutBtn = document.querySelector('.btn-logout');
+      if (logoutBtn) {
+        logoutBtn.textContent = 'خروج';
+        logoutBtn.style.borderColor = '';
+        logoutBtn.style.color = '';
+        logoutBtn.onclick = logout;
+      }
       updateBadge();
     } else {
       if (errorEl) errorEl.style.display = 'block';
