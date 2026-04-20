@@ -1142,6 +1142,33 @@ function showLoginScreen() {
   }, 100);
 }
 
+async function checkCodeFromPopup() {
+  const code = document.getElementById('popupCodeInput')?.value?.trim()?.toUpperCase();
+  const errorEl = document.getElementById('popupError');
+  if (!code) return;
+
+  try {
+    const res = await fetch('/api/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, deviceId: getDeviceId() })
+    });
+    const data = await res.json();
+
+    if (data.valid) {
+      localStorage.setItem('midaad_code', code);
+      localStorage.setItem('midaad_type', data.type || 'monthly');
+      localStorage.setItem('midaad_expiry', data.expiry || '0');
+      hideSubscribePopup();
+      updateBadge();
+    } else {
+      if (errorEl) errorEl.style.display = 'block';
+    }
+  } catch(e) {
+    if (errorEl) errorEl.style.display = 'block';
+  }
+}
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/service-worker.js');
 }
@@ -1167,17 +1194,38 @@ function openPaddleCheckout() {
 }
 </script>
 <!-- SUBSCRIBE POPUP -->
-<div id="subscribePopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9000;align-items:center;justify-content:center;padding:20px;">
-  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:24px;padding:28px;max-width:380px;width:100%;text-align:center;position:relative;">
+<div id="subscribePopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9000;align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
+  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:24px;padding:28px;max-width:380px;width:100%;text-align:center;position:relative;margin:auto;">
     <div style="position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
-    <div style="font-size:40px;margin-bottom:12px;">🔥</div>
-    <h2 style="font-size:20px;font-weight:900;color:var(--gold2);margin-bottom:8px;">انبهرت بالنتيجة؟</h2>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.7;">انتهت توليداتك المجانية الـ 3<br>اشترك الآن واحصل على <b style="color:var(--gold);">30 توليد يومياً</b></p>
-    <div style="background:var(--card);border-radius:14px;padding:14px;margin-bottom:20px;">
-      <div style="font-size:32px;font-weight:900;color:var(--gold2);">$14.99</div>
-      <div style="font-size:12px;color:var(--text3);">شهرياً — يعادل 60 ريال فقط</div>
+    <div style="font-size:36px;margin-bottom:10px;">🔥</div>
+    <h2 style="font-size:18px;font-weight:900;color:var(--gold2);margin-bottom:6px;">انبهرت بالنتيجة؟</h2>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.7;">انتهت توليداتك المجانية الـ 3<br>اشترك الآن واحصل على <b style="color:var(--gold);">30 توليد يومياً</b></p>
+
+    <div style="background:var(--card);border-radius:12px;padding:12px;margin-bottom:16px;">
+      <div style="font-size:28px;font-weight:900;color:var(--gold2);">$14.99</div>
+      <div style="font-size:11px;color:var(--text3);">شهرياً — يعادل 60 ريال فقط</div>
     </div>
-    <button onclick="openPaddleCheckout();hideSubscribePopup();" style="width:100%;background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:10px;">✨ اشترك الآن واحصل على كودك</button>
-    <button onclick="hideSubscribePopup();showLoginScreen();" style="width:100%;background:transparent;border:1px solid var(--border);border-radius:14px;padding:10px;font-size:13px;color:var(--text3);cursor:pointer;font-family:inherit;">لديّ كود دخول ←</button>
+
+    <button onclick="openPaddleCheckout();hideSubscribePopup();" style="width:100%;background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:14px;">✨ اشترك الآن واحصل على كودك</button>
+
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+      <div style="flex:1;height:1px;background:var(--border);"></div>
+      <span style="font-size:11px;color:var(--text3);">لديك كود؟</span>
+      <div style="flex:1;height:1px;background:var(--border);"></div>
+    </div>
+
+    <input type="text" id="popupCodeInput" class="code-field" placeholder="أدخل كود الدخول" maxlength="10" autocomplete="off" autocapitalize="characters" spellcheck="false" style="margin-bottom:8px;">
+    <button onclick="checkCodeFromPopup()" style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:12px;padding:11px;font-size:13px;font-weight:700;color:var(--text);cursor:pointer;font-family:inherit;margin-bottom:6px;">دخول ←</button>
+    <p id="popupError" style="display:none;color:var(--red);font-size:11px;margin-bottom:10px;text-align:center;">❌ كود غير صحيح</p>
+
+    <!-- تقييمات مصغرة -->
+    <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
+      <div style="font-size:10px;color:var(--text3);margin-bottom:8px;">⭐ ماذا يقول عملاؤنا</div>
+      <div id="popupReviewTrack" style="overflow:hidden;">
+        <div id="popupReviewInner" style="transition:transform 0.5s ease;">
+          <div style="font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;">"وفّر علي ساعات يومياً! أنشر على كل المنصات بدقائق." ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— صاحب متجر، جدة</span></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
