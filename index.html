@@ -995,6 +995,8 @@ async function generate() {
   const topic = document.getElementById('topicInput').value.trim();
   if (!topic) { alert('أدخل وصف منتجك أو موضوعك أولاً!'); return; }
 
+  const code = localStorage.getItem('midaad_code') || 'FREE';
+
   const btn = document.getElementById('generateBtn');
   const results = document.getElementById('results');
 
@@ -1013,7 +1015,7 @@ async function generate() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         topic, platform, contentType, tone, count,
-        code: localStorage.getItem('midaad_code'),
+        code: localStorage.getItem('midaad_code') || 'FREE',
         deviceId: getDeviceId()
       })
     });
@@ -1021,7 +1023,12 @@ async function generate() {
     const data = await res.json();
 
     if (data.error) {
-      results.innerHTML = `<div class="result-card"><div class="r-text" style="color:var(--red)">❌ ${data.error}</div></div>`;
+      if (data.error === 'FREE_LIMIT') {
+        showSubscribePopup();
+        results.innerHTML = '';
+      } else {
+        results.innerHTML = `<div class="result-card"><div class="r-text" style="color:var(--red)">❌ ${data.error}</div></div>`;
+      }
     } else {
       results.innerHTML = data.results.map((text, i) => `
         <div class="result-card">
@@ -1040,6 +1047,21 @@ async function generate() {
       localStorage.setItem('midaad_total', totalGenerated);
       localStorage.setItem('midaad_today', todayGenerated);
       updateStats();
+
+      // حدّث عداد التجربة المجانية
+      if (!localStorage.getItem('midaad_code')) {
+        const freeUsed = parseInt(localStorage.getItem('midaad_free_used') || '0') + 1;
+        localStorage.setItem('midaad_free_used', freeUsed);
+        const badge = document.getElementById('timerBadge');
+        const remaining = 3 - freeUsed;
+        if (remaining > 0) {
+          badge.textContent = `🎁 ${remaining} مجاناً`;
+        } else {
+          badge.textContent = '🔒 انتهت التجربة';
+          badge.style.color = 'var(--red)';
+          setTimeout(showSubscribePopup, 1500);
+        }
+      }
     }
   } catch(e) {
     results.innerHTML = `<div class="result-card"><div class="r-text" style="color:var(--red)">❌ خطأ في الاتصال، حاول مرة أخرى</div></div>`;
@@ -1064,11 +1086,51 @@ function copyText(btn, id) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (localStorage.getItem('midaad_code')) showApp();
+  if (localStorage.getItem('midaad_code')) {
+    showApp();
+  } else {
+    // دخول مباشر للتجربة المجانية
+    const freeUsed = parseInt(localStorage.getItem('midaad_free_used') || '0');
+    showApp();
+    // أظهر شارة التجربة المجانية
+    if (!localStorage.getItem('midaad_code')) {
+      const badge = document.getElementById('timerBadge');
+      if (badge) {
+        badge.textContent = `🎁 ${3 - freeUsed} مجاناً`;
+        badge.className = 'h-badge';
+        badge.style.background = 'rgba(52,211,153,0.1)';
+        badge.style.borderColor = 'rgba(52,211,153,0.3)';
+        badge.style.color = '#34D399';
+      }
+      // أخفي زر الخروج وبدله بزر الاشتراك
+      const logout = document.querySelector('.btn-logout');
+      if (logout) {
+        logout.textContent = 'اشترك';
+        logout.style.borderColor = 'var(--gold)';
+        logout.style.color = 'var(--gold)';
+        logout.onclick = showSubscribePopup;
+      }
+    }
+  }
   document.getElementById('codeInput')?.addEventListener('keydown', e => {
     if (e.key === 'Enter') checkCode();
   });
+  // أضف مثال جاهز في الخانة
+  const topicInput = document.getElementById('topicInput');
+  if (topicInput && !topicInput.value) {
+    topicInput.placeholder = 'مثال: متجر عبايات فاخرة، خصم 30% على جميع التشكيلات الجديدة لهذا الموسم...';
+  }
 });
+
+function showSubscribePopup() {
+  const popup = document.getElementById('subscribePopup');
+  if (popup) popup.style.display = 'flex';
+}
+
+function hideSubscribePopup() {
+  const popup = document.getElementById('subscribePopup');
+  if (popup) popup.style.display = 'none';
+}
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/service-worker.js');
@@ -1094,5 +1156,18 @@ function openPaddleCheckout() {
   });
 }
 </script>
-</body>
-</html>
+<!-- SUBSCRIBE POPUP -->
+<div id="subscribePopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9000;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:24px;padding:28px;max-width:380px;width:100%;text-align:center;position:relative;">
+    <div style="position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+    <div style="font-size:40px;margin-bottom:12px;">🔥</div>
+    <h2 style="font-size:20px;font-weight:900;color:var(--gold2);margin-bottom:8px;">انبهرت بالنتيجة؟</h2>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.7;">انتهت توليداتك المجانية الـ 3<br>اشترك الآن واحصل على <b style="color:var(--gold);">30 توليد يومياً</b></p>
+    <div style="background:var(--card);border-radius:14px;padding:14px;margin-bottom:20px;">
+      <div style="font-size:32px;font-weight:900;color:var(--gold2);">$14.99</div>
+      <div style="font-size:12px;color:var(--text3);">شهرياً — يعادل 60 ريال فقط</div>
+    </div>
+    <button onclick="openPaddleCheckout();hideSubscribePopup();" style="width:100%;background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:10px;">✨ اشترك الآن واحصل على كودك</button>
+    <button onclick="hideSubscribePopup()" style="width:100%;background:transparent;border:1px solid var(--border);border-radius:14px;padding:10px;font-size:13px;color:var(--text3);cursor:pointer;font-family:inherit;">لديّ كود دخول ←</button>
+  </div>
+</div>
