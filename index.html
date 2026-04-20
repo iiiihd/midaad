@@ -1102,13 +1102,13 @@ document.addEventListener('DOMContentLoaded', () => {
         badge.style.borderColor = 'rgba(52,211,153,0.3)';
         badge.style.color = '#34D399';
       }
-      // أخفي زر الخروج وبدله بزر الاشتراك
-      const logout = document.querySelector('.btn-logout');
-      if (logout) {
-        logout.textContent = 'اشترك';
-        logout.style.borderColor = 'var(--gold)';
-        logout.style.color = 'var(--gold)';
-        logout.onclick = showSubscribePopup;
+      // أخفي زر الخروج وبدله بزر الاشتراك فقط لو ما عنده كود
+      const logoutBtn = document.querySelector('.btn-logout');
+      if (logoutBtn && !localStorage.getItem('midaad_code')) {
+        logoutBtn.textContent = 'اشترك';
+        logoutBtn.style.borderColor = 'var(--gold)';
+        logoutBtn.style.color = 'var(--gold)';
+        logoutBtn.onclick = showSubscribePopup;
       }
     }
   }
