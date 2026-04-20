@@ -73,7 +73,7 @@ body::after{
 
 /* ===== LOGIN ===== */
 #loginScreen{
-  position:fixed;inset:0;
+  min-height:100vh;
   display:flex;align-items:center;justify-content:center;
   z-index:100;padding:20px;
   background:linear-gradient(135deg, #050a30 0%, #0E0E1C 50%, #1a1000 100%);
@@ -546,35 +546,82 @@ main{flex:1;padding:20px 16px 40px;max-width:680px;margin:0 auto;width:100%;}
       </div>
 
       <!-- REVIEWS SLIDER -->
-      <div style="margin-top:16px;">
-        <div style="font-size:11px;color:var(--text3);text-align:center;letter-spacing:2px;margin-bottom:10px;">⭐ آراء المستخدمين ⭐</div>
+      <div style="margin-top:12px;">
+        <div style="font-size:10px;color:var(--text3);text-align:center;letter-spacing:2px;margin-bottom:8px;">⭐ آراء المستخدمين ⭐</div>
         <div id="reviewSlider" style="overflow:hidden;position:relative;">
           <div id="reviewTrack" style="display:flex;gap:10px;transition:transform 0.5s ease;">
-            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;position:relative;overflow:hidden;">
+
+            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;position:relative;overflow:hidden;">
               <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
-              <div style="color:#F59E0B;font-size:13px;margin-bottom:8px;">⭐⭐⭐⭐⭐</div>
-              <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:8px;">"وفّر علي ساعات يومياً في كتابة المحتوى! الآن أنشر على كل المنصات بدقائق."</p>
-              <div style="font-size:11px;color:var(--text3);">— صاحب متجر إلكتروني</div>
+              <div style="color:#F59E0B;font-size:11px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
+              <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">"وفّر علي ساعات يومياً في كتابة المحتوى! الآن أنشر على كل المنصات بدقائق."</p>
+              <div style="font-size:10px;color:var(--text3);">— صاحب متجر إلكتروني، جدة</div>
             </div>
-            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;position:relative;overflow:hidden;">
+
+            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;position:relative;overflow:hidden;">
               <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
-              <div style="color:#F59E0B;font-size:13px;margin-bottom:8px;">⭐⭐⭐⭐⭐</div>
-              <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:8px;">"أفضل استثمار لمتجري! المحتوى احترافي ومناسب لكل منصة. أنصح به بشدة."</p>
-              <div style="font-size:11px;color:var(--text3);">— مصممة أزياء</div>
+              <div style="color:#F59E0B;font-size:11px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
+              <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">"أفضل استثمار لمتجري! المحتوى احترافي ومناسب لكل منصة. أنصح به بشدة."</p>
+              <div style="font-size:10px;color:var(--text3);">— مصممة أزياء، الكويت</div>
             </div>
-            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;position:relative;overflow:hidden;">
+
+            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;position:relative;overflow:hidden;">
               <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
-              <div style="color:#F59E0B;font-size:13px;margin-bottom:8px;">⭐⭐⭐⭐⭐</div>
-              <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:8px;">"كنت أدفع لكاتب محتوى 1500 ريال شهرياً، الحين مِداد يسوي نفس الشغل بأقل من 60 ريال!"</p>
-              <div style="font-size:11px;color:var(--text3);">— صاحب مطعم</div>
+              <div style="color:#F59E0B;font-size:11px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
+              <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">"كنت أدفع لكاتب محتوى 1500 ريال شهرياً، الحين مِداد يسوي نفس الشغل بأقل من 60 ريال!"</p>
+              <div style="font-size:10px;color:var(--text3);">— صاحب مطعم، الرياض</div>
             </div>
+
+            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;position:relative;overflow:hidden;">
+              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+              <div style="color:#F59E0B;font-size:11px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
+              <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">"والله جربت مِداد وما توقعت يكون بهالمستوى! يكتب بوستات انستقرام أحسن مني بكثير 😂"</p>
+              <div style="font-size:10px;color:var(--text3);">— صاحبة متجر، القاهرة</div>
+            </div>
+
+            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;position:relative;overflow:hidden;">
+              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+              <div style="color:#F59E0B;font-size:11px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
+              <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">"كنت أدفع لمصمم محتوى كل شهر، الحين مِداد يسوي نفس الشغل وأحسن. قرار ما ندمت عليه!"</p>
+              <div style="font-size:10px;color:var(--text3);">— صاحب متجر إلكتروني، دبي</div>
+            </div>
+
+            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;position:relative;overflow:hidden;">
+              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+              <div style="color:#F59E0B;font-size:11px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
+              <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">"ما صدقت لما جربته! كتب لي 3 بوستات احترافية عن مطعمي في ثواني 😄"</p>
+              <div style="font-size:10px;color:var(--text3);">— صاحب مطعم، عمّان</div>
+            </div>
+
           </div>
         </div>
-        <div style="display:flex;justify-content:center;gap:6px;margin-top:10px;" id="reviewDots">
-          <span style="width:6px;height:6px;border-radius:50%;background:var(--gold);display:inline-block;"></span>
-          <span style="width:6px;height:6px;border-radius:50%;background:var(--border);display:inline-block;"></span>
-          <span style="width:6px;height:6px;border-radius:50%;background:var(--border);display:inline-block;"></span>
+        <div style="display:flex;justify-content:center;gap:6px;margin-top:8px;" id="reviewDots">
+          <span style="width:5px;height:5px;border-radius:50%;background:var(--gold);display:inline-block;cursor:pointer;" onclick="showReview(0)"></span>
+          <span style="width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;cursor:pointer;" onclick="showReview(1)"></span>
+          <span style="width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;cursor:pointer;" onclick="showReview(2)"></span>
+          <span style="width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;cursor:pointer;" onclick="showReview(3)"></span>
+          <span style="width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;cursor:pointer;" onclick="showReview(4)"></span>
+          <span style="width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;cursor:pointer;" onclick="showReview(5)"></span>
         </div>
+      </div>
+
+      <!-- ADD REVIEW -->
+      <div style="margin-top:10px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:8px;text-align:center;">شاركنا تجربتك ⭐</div>
+        <div id="starRating" style="display:flex;justify-content:center;gap:6px;margin-bottom:8px;font-size:20px;cursor:pointer;">
+          <span onclick="setRating(1)" class="star">☆</span>
+          <span onclick="setRating(2)" class="star">☆</span>
+          <span onclick="setRating(3)" class="star">☆</span>
+          <span onclick="setRating(4)" class="star">☆</span>
+          <span onclick="setRating(5)" class="star">☆</span>
+        </div>
+        <textarea id="reviewText" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px;font-size:12px;color:var(--text);font-family:inherit;resize:none;min-height:50px;outline:none;margin-bottom:6px;" placeholder="اكتب تجربتك مع مِداد..."></textarea>
+        <div style="display:flex;gap:6px;margin-bottom:6px;">
+          <input id="reviewJob" type="text" style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px;font-size:12px;color:var(--text);font-family:inherit;outline:none;" placeholder="مهنتك (اختياري)">
+          <input id="reviewCity" type="text" style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px;font-size:12px;color:var(--text);font-family:inherit;outline:none;" placeholder="مدينتك (اختياري)">
+        </div>
+        <button onclick="submitReview()" style="width:100%;margin-top:2px;background:var(--gold-dim);border:1px solid var(--border2);border-radius:10px;padding:8px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;">إرسال التقييم ✨</button>
+        <p id="reviewSuccess" style="display:none;text-align:center;font-size:12px;color:var(--green);margin-top:6px;">✅ شكراً على تقييمك!</p>
       </div>
     </div>
   </div>
@@ -584,6 +631,8 @@ main{flex:1;padding:20px 16px 40px;max-width:680px;margin:0 auto;width:100%;}
 let currentReview = 0;
 const track = document.getElementById('reviewTrack');
 const dots = document.getElementById('reviewDots')?.children;
+const totalReviews = 6;
+let userRating = 0;
 
 function showReview(index) {
   if (!track) return;
@@ -594,11 +643,73 @@ function showReview(index) {
       d.style.background = i === index ? 'var(--gold)' : 'var(--border)';
     });
   }
+  const addBox = document.getElementById('addReviewBox');
+  if (addBox) addBox.style.display = index === 6 ? 'block' : 'none';
 }
 
 setInterval(() => {
-  showReview((currentReview + 1) % 3);
+  showReview((currentReview + 1) % totalReviews);
 }, 4000);
+
+function setRating(n) {
+  userRating = n;
+  const stars = document.querySelectorAll('.star');
+  stars.forEach((s, i) => {
+    s.textContent = i < n ? '⭐' : '☆';
+  });
+}
+
+async function submitReview() {
+  const text = document.getElementById('reviewText')?.value?.trim();
+  const job = document.getElementById('reviewJob')?.value?.trim();
+  const city = document.getElementById('reviewCity')?.value?.trim();
+  if (!userRating) { alert('اختر تقييمك بالنجوم أولاً!'); return; }
+  if (!text || text.length < 5) { alert('اكتب تجربتك أولاً!'); return; }
+
+  try {
+    const res = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rating: userRating, text, job, city })
+    });
+
+    if (res.ok) {
+      document.getElementById('reviewSuccess').style.display = 'block';
+      document.getElementById('reviewText').value = '';
+      if (document.getElementById('reviewJob')) document.getElementById('reviewJob').value = '';
+      if (document.getElementById('reviewCity')) document.getElementById('reviewCity').value = '';
+      setRating(0);
+      userRating = 0;
+      loadUserReviews();
+    }
+  } catch(e) {
+    alert('خطأ في الإرسال، حاول مرة ثانية');
+  }
+}
+
+async function loadUserReviews() {
+  try {
+    const res = await fetch('/api/reviews');
+    const data = await res.json();
+    const track = document.getElementById('reviewTrack');
+    if (!track || !data.reviews?.length) return;
+
+    const stars = (n) => '⭐'.repeat(n);
+    data.reviews.slice(-3).forEach(r => {
+      const div = document.createElement('div');
+      div.style.cssText = 'min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;position:relative;overflow:hidden;';
+      div.innerHTML = `
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+        <div style="color:#F59E0B;font-size:11px;margin-bottom:4px;">${stars(r.rating)}</div>
+        <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">"${r.text}"</p>
+        <div style="font-size:10px;color:var(--text3);">— ${r.job || 'عميل مِداد'}${r.city ? '، ' + r.city : ''}</div>
+      `;
+      track.appendChild(div);
+    });
+  } catch(e) {}
+}
+
+document.addEventListener('DOMContentLoaded', loadUserReviews);
 </script>
 
 <!-- APP -->
@@ -954,13 +1065,19 @@ if ('serviceWorker' in navigator) {
 </script>
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  Paddle.Initialize({
-    token: 'live_d8a82b35252d9d828dd81fe3ff0'
-  });
+window.addEventListener('load', function() {
+  if (typeof Paddle !== 'undefined') {
+    Paddle.Initialize({
+      token: 'live_d8a82b35252d9d828dd81fe3ff0'
+    });
+  }
 });
 
 function openPaddleCheckout() {
+  if (typeof Paddle === 'undefined') {
+    window.location.href = 'https://student-assistant.lemonsqueezy.com/checkout/buy/b4bf3efb-af6c-4e18-975c-d5425eb2b341?locale=en';
+    return;
+  }
   Paddle.Checkout.open({
     items: [{ priceId: 'pri_01kpgyf5nvhx060t5xzsn9zp7j', quantity: 1 }]
   });
