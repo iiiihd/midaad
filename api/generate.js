@@ -33,6 +33,7 @@ export default async function handler(req, res) {
 
   const upperCode = code?.toUpperCase();
   const isVIP = VIP_CODES.has(upperCode);
+  const numVersions = Math.min(parseInt(count) || 1, 3);
 
   // التجربة المجانية — بدون كود
   if (!upperCode || upperCode === 'FREE') {
@@ -66,7 +67,6 @@ export default async function handler(req, res) {
     }
 
     // Daily limit check for all users including VIP
-    const numVersions = Math.min(parseInt(count) || 1, 3);
     const today = new Date().toISOString().slice(0,10);
     const dailyKey = `daily_${upperCode}_${today}`;
     const dailyCount = parseInt(await kvGet(dailyKey) || '0');
