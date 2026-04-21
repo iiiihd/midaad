@@ -869,11 +869,10 @@ function updateUI(l) {
   const t = i18n[l] || i18n.ar;
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
-    if (t[key]) el.textContent = t[key];
+    if (t[key] !== undefined) el.innerHTML = t[key];
   });
-  const btn = document.getElementById('generateBtn');
-  if (btn && !btn.disabled) btn.innerHTML = t.generateBtn;
   document.documentElement.dir = l === 'en' ? 'ltr' : 'rtl';
+  document.getElementById('topicInput')?.setAttribute('dir', l === 'en' ? 'ltr' : 'rtl');
 }
 let totalGenerated = parseInt(localStorage.getItem('midaad_total') || '0');
 let todayGenerated = parseInt(localStorage.getItem('midaad_today') || '0');
