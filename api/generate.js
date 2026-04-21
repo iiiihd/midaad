@@ -99,6 +99,7 @@ ${twitterNote}${hashtagNote}${langNote}
 اكتب ${numVersions} نسخ${numVersions > 1 ? ' مختلفة تماماً' : ''} من ${contentType} لمنصة ${platform} بأسلوب ${tone}.
 استخدم الإيموجي المناسبة بذكاء.
 ${numVersions > 1 ? `اكتب هكذا:\nالنسخة 1:\n[المحتوى]\nالنسخة 2:\n[المحتوى]${numVersions === 3 ? '\nالنسخة 3:\n[المحتوى]' : ''}` : 'اكتب المحتوى مباشرة بدون عناوين:'}`;
+
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
