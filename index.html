@@ -725,8 +725,8 @@ document.addEventListener('DOMContentLoaded', loadUserReviews);
     <!-- Language -->
     <div class="section-label">Language / اللغة</div>
     <div style="display:flex;gap:8px;margin-bottom:24px;">
-      <button class="p-btn active" id="langAr" onclick="setLang(this,'ar')" style="flex:1;justify-content:center;">🇸🇦 عربي</button>
-      <button class="p-btn" id="langEn" onclick="setLang(this,'en')" style="flex:1;justify-content:center;">🇺🇸 English</button>
+      <button class="p-btn active" id="langAr" onclick="setLang(this,'ar')" style="flex:1;justify-content:center;">عربي</button>
+      <button class="p-btn" id="langEn" onclick="setLang(this,'en')" style="flex:1;justify-content:center;">English</button>
     </div>
 
     <!-- Platform -->
@@ -789,6 +789,10 @@ document.addEventListener('DOMContentLoaded', loadUserReviews);
 
     <!-- Input -->
     <div class="input-box">
+      <!-- زر جرّب مثالاً -->
+      <button id="tryExampleBtn" onclick="tryExample()" style="width:100%;margin-bottom:10px;background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.04));border:1.5px dashed rgba(201,168,76,0.5);border-radius:12px;padding:11px;font-size:13px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;transition:all 0.2s;" onmouseover="this.style.background='rgba(201,168,76,0.15)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.04))'" data-i18n="tryExampleBtn">
+        🚀 جرّب مثالاً الآن — مجاناً!
+      </button>
       <label class="field-label" data-i18n="fieldLabel">صف منتجك أو خدمتك أو موضوعك</label>
       <textarea class="text-field" id="topicInput" placeholder="مثال: متجر عبايات فاخرة، عرض خاص خصم 30% على جميع التشكيلات الجديدة لهذا الموسم..." rows="3"></textarea>
 
@@ -816,11 +820,6 @@ document.addEventListener('DOMContentLoaded', loadUserReviews);
 
     <button class="btn-generate" id="generateBtn" onclick="generate()" data-i18n="generateBtn">
       ✨ ولّد المحتوى الآن
-    </button>
-
-    <!-- زر جرّب مثالاً -->
-    <button id="tryExampleBtn" onclick="tryExample()" style="width:100%;margin-top:10px;background:transparent;border:1.5px dashed rgba(201,168,76,0.4);border-radius:14px;padding:12px;font-size:13px;font-weight:600;color:var(--gold);cursor:pointer;font-family:inherit;transition:all 0.2s;" onmouseover="this.style.background='rgba(201,168,76,0.08)'" onmouseout="this.style.background='transparent'" data-i18n="tryExampleBtn">
-      🚀 جرّب مثالاً الآن — مجاناً!
     </button>
 
     <div id="results"></div>
