@@ -893,6 +893,10 @@ function updateUI(l) {
     };
     if (placeholders[key]) el.placeholder = placeholders[key][l] || placeholders[key].ar;
   });
+  // تبديل التقييمات حسب اللغة
+  document.querySelectorAll('.ar-review').forEach(el => el.style.display = l === 'en' ? 'none' : 'block');
+  document.querySelectorAll('.en-review').forEach(el => el.style.display = l === 'en' ? 'block' : 'none');
+  
   const codeInput = document.getElementById('popupCodeInput');
   if (codeInput) codeInput.placeholder = l === 'en' ? 'Enter your access code' : 'أدخل كود الدخول';
   document.documentElement.dir = l === 'en' ? 'ltr' : 'rtl';
@@ -1217,6 +1221,15 @@ async function submitPopupReview() {
       document.getElementById('popupCity').value = '';
       setPopupRating(0);
       popupRating = 0;
+      // أضف التقييم في الـ popup مباشرة
+      const inner = document.getElementById('popupReviewInner');
+      if (inner) {
+        const div = document.createElement('div');
+        div.className = 'popup-review';
+        div.style.cssText = 'font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;margin-top:8px;';
+        div.innerHTML = `"${text}" ${'⭐'.repeat(popupRating || 5)}<br><span style="font-size:10px;color:var(--text3);">— ${job || (currentLang === 'en' ? 'Midaad User' : 'عميل مِداد')}${city ? '، ' + city : ''}</span>`;
+        inner.appendChild(div);
+      }
     }
   } catch(e) {}
 }
@@ -1323,9 +1336,12 @@ function openPaddleCheckout() {
       <div style="font-size:10px;color:var(--text3);margin-bottom:8px;" data-i18n="popupReviewsTitle">⭐ ماذا يقول عملاؤنا</div>
       <div style="overflow:hidden;">
         <div id="popupReviewInner" style="transition:transform 0.5s ease;">
-          <div class="popup-review" style="font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;">"Saved me hours daily! Now I post on all platforms in minutes." ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— Store Owner, Jeddah</span></div>
-          <div class="popup-review" style="font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;margin-top:8px;">"Best investment for my business! Professional content for every platform." ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— Fashion Designer, Kuwait</span></div>
-          <div class="popup-review" style="font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;margin-top:8px;">"Amazing results! Writes better content than I ever could." ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— Restaurant Owner, Dubai</span></div>
+          <div class="popup-review ar-review" style="font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;">"وفّر علي ساعات يومياً! أنشر على كل المنصات بدقائق." ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— صاحب متجر، جدة</span></div>
+          <div class="popup-review ar-review" style="font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;margin-top:8px;">"كنت أدفع 1500 ريال لكاتب محتوى، الحين مِداد يسوي نفس الشغل!" ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— صاحب مطعم، الرياض</span></div>
+          <div class="popup-review ar-review" style="font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;margin-top:8px;">"أفضل استثمار لمتجري! المحتوى احترافي ومناسب لكل منصة." ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— مصممة أزياء، الكويت</span></div>
+          <div class="popup-review en-review" style="display:none;font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;">"Saved me hours daily! Now I post on all platforms in minutes." ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— Store Owner, Jeddah</span></div>
+          <div class="popup-review en-review" style="display:none;font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;margin-top:8px;">"Best investment for my business! Professional content for every platform." ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— Fashion Designer, Kuwait</span></div>
+          <div class="popup-review en-review" style="display:none;font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;margin-top:8px;">"Amazing results! Writes better content than I ever could." ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— Restaurant Owner, Dubai</span></div>
         </div>
       </div>
     </div>
