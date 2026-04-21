@@ -831,14 +831,13 @@ let tone = 'احترافي';
 let count = 1;
 
 function setLang(el, l) {
-  document.querySelectorAll('#langAr,#langEn,#langOther').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#langAr,#langEn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
   currentLang = l;
   localStorage.setItem('midaad_lang', l);
   const topicInput = document.getElementById('topicInput');
   if (topicInput) {
-    if (l === 'en') topicInput.placeholder = 'Example: Luxury abaya store, 30% discount on all new collections...';
-    else if (l === 'other') topicInput.placeholder = 'Write your topic in your language...';
+    if (l === 'en') topicInput.placeholder = 'Example: Luxury perfume store, 50% discount this weekend only...';
     else topicInput.placeholder = 'مثال: متجر عبايات فاخرة، خصم 30% على جميع التشكيلات الجديدة لهذا الموسم...';
   }
   updateUI(l);
@@ -1048,11 +1047,10 @@ async function generate() {
         topic, platform, contentType, tone, count,
         code: localStorage.getItem('midaad_code') || 'FREE',
         deviceId: getDeviceId(),
-        lang: currentLang,
-        language: currentLang
+        lang: currentLang || localStorage.getItem('midaad_lang') || 'ar',
+        language: currentLang || localStorage.getItem('midaad_lang') || 'ar'
       })
     });
-    console.log('Lang sent:', currentLang);
 
     const data = await res.json();
 
