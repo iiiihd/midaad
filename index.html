@@ -818,6 +818,11 @@ document.addEventListener('DOMContentLoaded', loadUserReviews);
       ✨ ولّد المحتوى الآن
     </button>
 
+    <!-- زر جرّب مثالاً -->
+    <button id="tryExampleBtn" onclick="tryExample()" style="width:100%;margin-top:10px;background:transparent;border:1.5px dashed rgba(201,168,76,0.4);border-radius:14px;padding:12px;font-size:13px;font-weight:600;color:var(--gold);cursor:pointer;font-family:inherit;transition:all 0.2s;" onmouseover="this.style.background='rgba(201,168,76,0.08)'" onmouseout="this.style.background='transparent'" data-i18n="tryExampleBtn">
+      🚀 جرّب مثالاً الآن — مجاناً!
+    </button>
+
     <div id="results"></div>
   </main>
 </div>
@@ -829,6 +834,32 @@ let currentLang = localStorage.getItem('midaad_lang') || 'ar';
 let contentType = 'بوست';
 let tone = 'احترافي';
 let count = 1;
+
+const examples = {
+  ar: [
+    'متجر عبايات فاخرة، خصم 30% على جميع التشكيلات الجديدة لهذا الموسم',
+    'مطعم مأكولات بحرية، افتتاح فرع جديد في الرياض مع عروض خاصة',
+    'كافيه قهوة مختصة، قهوة يومية بأجواء هادئة ومريحة',
+    'متجر إلكتروني للعطور، وصول تشكيلة جديدة من أفخر العطور العالمية',
+  ],
+  en: [
+    'Luxury perfume store, 50% discount on all products this weekend only',
+    'New fitness app launch, track your workouts and reach your goals faster',
+    'Specialty coffee shop, freshly roasted beans and cozy atmosphere downtown',
+    'Online fashion store, new summer collection just arrived — limited stock',
+  ]
+};
+
+function tryExample() {
+  const topicInput = document.getElementById('topicInput');
+  if (!topicInput) return;
+  const list = examples[currentLang] || examples.ar;
+  const random = list[Math.floor(Math.random() * list.length)];
+  topicInput.value = random;
+  topicInput.style.borderColor = 'rgba(201,168,76,0.6)';
+  setTimeout(() => { topicInput.style.borderColor = ''; }, 1500);
+  generate();
+}
 
 function setLang(el, l) {
   document.querySelectorAll('#langAr,#langEn').forEach(b => b.classList.remove('active'));
@@ -848,7 +879,7 @@ const i18n = {
     logout: 'خروج', statGenerated: 'محتوى تم توليده', statPlatform: 'المنصة الحالية', statToday: 'اليوم',
     sectionPlatform: 'المنصة', sectionType: 'نوع المحتوى', sectionLang: 'Language / اللغة',
     fieldLabel: 'صف منتجك أو خدمتك أو موضوعك', countLabel: 'عدد النسخ:', toneLabel: 'أسلوب الكتابة',
-    generateBtn: '✨ ولّد المحتوى الآن', generating: '⏳ مِداد يكتب لك...',
+    generateBtn: '✨ ولّد المحتوى الآن', generating: '⏳ مِداد يكتب لك...', tryExampleBtn: '🚀 جرّب مثالاً الآن — مجاناً!',
     instagram: 'انستقرام', tiktok: 'تيك توك', twitter: 'تويتر', whatsapp: 'واتساب', linkedin: 'لينكدإن', snapchat: 'سناب',
     typePost: 'بوست', typeCaption: 'كابشن', typeAd: 'إعلان', typeReply: 'رد تعليق', typeStory: 'ستوري', typeHashtags: 'هاشتاقات',
     tonePro: 'احترافي', toneFriendly: 'ودي', toneFun: 'مرح', tonePersuasive: 'مقنع', toneInspiring: 'ملهم', toneLuxury: 'فخم',
@@ -864,7 +895,7 @@ const i18n = {
     logout: 'Logout', statGenerated: 'Content Generated', statPlatform: 'Current Platform', statToday: 'Today',
     sectionPlatform: 'Platform', sectionType: 'Content Type', sectionLang: 'Language / اللغة',
     fieldLabel: 'Describe your product, service or topic', countLabel: 'Versions:', toneLabel: 'Writing Style',
-    generateBtn: '✨ Generate Content Now', generating: '⏳ Midaad is writing...',
+    generateBtn: '✨ Generate Content Now', generating: '⏳ Midaad is writing...', tryExampleBtn: '🚀 Try an Example — Free!',
     instagram: 'Instagram', tiktok: 'TikTok', twitter: 'Twitter', whatsapp: 'WhatsApp', linkedin: 'LinkedIn', snapchat: 'Snapchat',
     typePost: 'Post', typeCaption: 'Caption', typeAd: 'Ad', typeReply: 'Reply', typeStory: 'Story', typeHashtags: 'Hashtags',
     tonePro: 'Professional', toneFriendly: 'Friendly', toneFun: 'Fun', tonePersuasive: 'Persuasive', toneInspiring: 'Inspiring', toneLuxury: 'Luxury',
