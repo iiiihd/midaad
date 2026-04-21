@@ -1052,6 +1052,7 @@ async function generate() {
         language: currentLang
       })
     });
+    console.log('Lang sent:', currentLang);
 
     const data = await res.json();
 
