@@ -5,7 +5,9 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { topic, platform, contentType, tone, count, code, deviceId } = req.body;
+  const { topic, platform, contentType, tone, count, code, deviceId, lang } = req.body;
+  const language = lang || 'ar';
+  const lang = language || 'ar'; // ar = عربي، en = English
 
   const KV_URL = process.env.KV_REST_API_URL;
   const KV_TOKEN = process.env.KV_REST_API_TOKEN;
@@ -82,29 +84,21 @@ export default async function handler(req, res) {
   const twitterNote = platform === 'تويتر' ? 'كل نسخة يجب ألا تتجاوز 280 حرف.' : '';
   const hashtagNote = contentType === 'هاشتاقات' ? 'اكتب 15-20 هاشتاق مناسبة ومتنوعة.' : '';
 
-  const prompt = `أنت خبير محترف في كتابة المحتوى العربي لمنصات التواصل الاجتماعي.
+  const langNote = language === 'en' ? 'Write all content in English only.' : language === 'ar' ? 'اكتب بلغة عربية سليمة وجذابة.' : 'Write in the same language as the topic.';
 
-المنصة: ${platform}
-نوع المحتوى: ${contentType}
-الأسلوب: ${tone}
-الموضوع/المنتج: ${topic}
-
-${twitterNote}
-${hashtagNote}
-
+  const prompt = language === 'en' ?
+    `You are a professional social media content writer.
+Platform: ${platform} | Type: ${contentType} | Tone: ${tone}
+Topic: ${topic}
+Write ${numVersions} ${numVersions > 1 ? 'different versions' : 'version'} of ${contentType} for ${platform} in ${tone} tone. Use relevant emojis.
+${numVersions > 1 ? `Format:\nVersion 1:\n[content]\nVersion 2:\n[content]${numVersions === 3 ? '\nVersion 3:\n[content]' : ''}` : 'Write content directly:'}` :
+    `أنت خبير محترف في كتابة المحتوى لمنصات التواصل الاجتماعي.
+المنصة: ${platform} | نوع المحتوى: ${contentType} | الأسلوب: ${tone}
+الموضوع: ${topic}
+${twitterNote}${hashtagNote}${langNote}
 اكتب ${numVersions} نسخ${numVersions > 1 ? ' مختلفة تماماً' : ''} من ${contentType} لمنصة ${platform} بأسلوب ${tone}.
-${numVersions > 1 ? 'كل نسخة يجب أن تكون مميزة ومختلفة في الأسلوب والبناء.' : ''}
 استخدم الإيموجي المناسبة بذكاء.
-اكتب بلغة عربية سليمة وجذابة.
-
-${numVersions > 1 ? `اكتب الإجابة هكذا بالضبط (لا تضيف أي نص آخر):
-النسخة 1:
-[المحتوى]
-
-النسخة 2:
-[المحتوى]
-${numVersions === 3 ? '\nالنسخة 3:\n[المحتوى]' : ''}` : 'اكتب المحتوى مباشرة بدون أي عناوين أو ترقيم:'}`;
-
+${numVersions > 1 ? `اكتب هكذا:\nالنسخة 1:\n[المحتوى]\nالنسخة 2:\n[المحتوى]${numVersions === 3 ? '\nالنسخة 3:\n[المحتوى]' : ''}` : 'اكتب المحتوى مباشرة بدون عناوين:'}`;
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
