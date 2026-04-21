@@ -87,10 +87,10 @@ module.exports = async function handler(req, res) {
   const langNote = language === 'en' ? 'Write all content in English only.' : language === 'ar' ? 'اكتب بلغة عربية سليمة وجذابة.' : 'Write in the same language as the topic.';
 
   const prompt = language === 'en' ?
-    `You are a professional social media content writer.
+    `You are a professional social media content writer. IMPORTANT: Write ALL content in ENGLISH ONLY. Do not use Arabic.
 Platform: ${platform} | Type: ${contentType} | Tone: ${tone}
 Topic: ${topic}
-Write ${numVersions} ${numVersions > 1 ? 'different versions' : 'version'} of ${contentType} for ${platform} in ${tone} tone. Use relevant emojis.
+Write ${numVersions} ${numVersions > 1 ? 'different versions' : 'version'} of ${contentType} for ${platform} in ${tone} tone. Use relevant emojis. ALL TEXT MUST BE IN ENGLISH.
 ${numVersions > 1 ? `Format:\nVersion 1:\n[content]\nVersion 2:\n[content]${numVersions === 3 ? '\nVersion 3:\n[content]' : ''}` : 'Write content directly:'}` :
     `أنت خبير محترف في كتابة المحتوى لمنصات التواصل الاجتماعي.
 المنصة: ${platform} | نوع المحتوى: ${contentType} | الأسلوب: ${tone}
