@@ -1174,7 +1174,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function showSubscribePopup() {
   const popup = document.getElementById('subscribePopup');
-  if (popup) popup.style.display = 'flex';
+  if (popup) {
+    popup.style.display = 'flex';
+    updateUI(currentLang);
+  }
 }
 
 function hideSubscribePopup() {
