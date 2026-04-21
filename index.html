@@ -8,8 +8,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="مِداد">
 <link rel="manifest" href="/manifest.json">
-<!-- Vercel Web Analytics -->
-<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-X7B90BLFFV"></script>
 <script>
@@ -511,6 +509,17 @@ main{flex:1;padding:20px 16px 40px;max-width:680px;margin:0 auto;width:100%;}
 .stat-num{font-size:20px;font-weight:800;color:var(--gold2);}
 .stat-label{font-size:10px;color:var(--text3);margin-top:2px;}
 
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+#reviewTicker {
+  animation: ticker 40s linear infinite;
+}
+#reviewTicker:hover {
+  animation-play-state: paused;
+}
+
 </style>
 </head>
 <body>
@@ -547,63 +556,25 @@ main{flex:1;padding:20px 16px 40px;max-width:680px;margin:0 auto;width:100%;}
         إذا لم تجده، تحقق من مجلد <b>البريد غير الهام / Spam</b>
       </div>
 
-      <!-- REVIEWS SLIDER -->
+      <!-- REVIEWS TICKER -->
       <div style="margin-top:12px;">
         <div style="font-size:10px;color:var(--text3);text-align:center;letter-spacing:2px;margin-bottom:8px;">⭐ آراء المستخدمين ⭐</div>
-        <div id="reviewSlider" style="overflow:hidden;position:relative;">
-          <div id="reviewTrack" style="display:flex;gap:10px;transition:transform 0.5s ease;">
-
-            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;position:relative;overflow:hidden;">
-              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
-              <div style="color:#F59E0B;font-size:11px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
-              <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">"وفّر علي ساعات يومياً في كتابة المحتوى! الآن أنشر على كل المنصات بدقائق."</p>
-              <div style="font-size:10px;color:var(--text3);">— صاحب متجر إلكتروني، جدة</div>
-            </div>
-
-            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;position:relative;overflow:hidden;">
-              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
-              <div style="color:#F59E0B;font-size:11px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
-              <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">"أفضل استثمار لمتجري! المحتوى احترافي ومناسب لكل منصة. أنصح به بشدة."</p>
-              <div style="font-size:10px;color:var(--text3);">— مصممة أزياء، الكويت</div>
-            </div>
-
-            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;position:relative;overflow:hidden;">
-              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
-              <div style="color:#F59E0B;font-size:11px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
-              <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">"كنت أدفع لكاتب محتوى 1500 ريال شهرياً، الحين مِداد يسوي نفس الشغل بأقل من 60 ريال!"</p>
-              <div style="font-size:10px;color:var(--text3);">— صاحب مطعم، الرياض</div>
-            </div>
-
-            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;position:relative;overflow:hidden;">
-              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
-              <div style="color:#F59E0B;font-size:11px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
-              <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">"والله جربت مِداد وما توقعت يكون بهالمستوى! يكتب بوستات انستقرام أحسن مني بكثير 😂"</p>
-              <div style="font-size:10px;color:var(--text3);">— صاحبة متجر، القاهرة</div>
-            </div>
-
-            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;position:relative;overflow:hidden;">
-              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
-              <div style="color:#F59E0B;font-size:11px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
-              <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">"كنت أدفع لمصمم محتوى كل شهر، الحين مِداد يسوي نفس الشغل وأحسن. قرار ما ندمت عليه!"</p>
-              <div style="font-size:10px;color:var(--text3);">— صاحب متجر إلكتروني، دبي</div>
-            </div>
-
-            <div style="min-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;position:relative;overflow:hidden;">
-              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
-              <div style="color:#F59E0B;font-size:11px;margin-bottom:4px;">⭐⭐⭐⭐⭐</div>
-              <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">"ما صدقت لما جربته! كتب لي 3 بوستات احترافية عن مطعمي في ثواني 😄"</p>
-              <div style="font-size:10px;color:var(--text3);">— صاحب مطعم، عمّان</div>
-            </div>
-
+        <div style="overflow:hidden;position:relative;border-radius:12px;background:var(--surface);border:1px solid var(--border);padding:10px 0;">
+          <div id="reviewTicker" style="display:flex;gap:60px;white-space:nowrap;will-change:transform;">
+            <span style="font-size:12px;color:var(--text2);flex-shrink:0;">⭐⭐⭐⭐⭐ &nbsp;"وفّر علي ساعات يومياً في كتابة المحتوى!" &nbsp;<span style="color:var(--text3);">— صاحب متجر، جدة</span></span>
+            <span style="font-size:12px;color:var(--text2);flex-shrink:0;">⭐⭐⭐⭐⭐ &nbsp;"أفضل استثمار لمتجري! المحتوى احترافي ومناسب." &nbsp;<span style="color:var(--text3);">— مصممة أزياء، الكويت</span></span>
+            <span style="font-size:12px;color:var(--text2);flex-shrink:0;">⭐⭐⭐⭐⭐ &nbsp;"كنت أدفع 1500 ريال شهرياً، الحين مِداد يسوي نفس الشغل!" &nbsp;<span style="color:var(--text3);">— صاحب مطعم، الرياض</span></span>
+            <span style="font-size:12px;color:var(--text2);flex-shrink:0;">⭐⭐⭐⭐⭐ &nbsp;"ما توقعت يكون بهالمستوى! أحسن مني 😂" &nbsp;<span style="color:var(--text3);">— صاحبة متجر، القاهرة</span></span>
+            <span style="font-size:12px;color:var(--text2);flex-shrink:0;">⭐⭐⭐⭐⭐ &nbsp;"قرار ما ندمت عليه أبداً. موفر وسريع!" &nbsp;<span style="color:var(--text3);">— صاحب متجر، دبي</span></span>
+            <span style="font-size:12px;color:var(--text2);flex-shrink:0;">⭐⭐⭐⭐⭐ &nbsp;"كتب لي 3 بوستات عن مطعمي في ثواني 😄" &nbsp;<span style="color:var(--text3);">— صاحب مطعم، عمّان</span></span>
+            <!-- نسخة ثانية للحلقة المستمرة -->
+            <span style="font-size:12px;color:var(--text2);flex-shrink:0;">⭐⭐⭐⭐⭐ &nbsp;"وفّر علي ساعات يومياً في كتابة المحتوى!" &nbsp;<span style="color:var(--text3);">— صاحب متجر، جدة</span></span>
+            <span style="font-size:12px;color:var(--text2);flex-shrink:0;">⭐⭐⭐⭐⭐ &nbsp;"أفضل استثمار لمتجري! المحتوى احترافي ومناسب." &nbsp;<span style="color:var(--text3);">— مصممة أزياء، الكويت</span></span>
+            <span style="font-size:12px;color:var(--text2);flex-shrink:0;">⭐⭐⭐⭐⭐ &nbsp;"كنت أدفع 1500 ريال شهرياً، الحين مِداد يسوي نفس الشغل!" &nbsp;<span style="color:var(--text3);">— صاحب مطعم، الرياض</span></span>
+            <span style="font-size:12px;color:var(--text2);flex-shrink:0;">⭐⭐⭐⭐⭐ &nbsp;"ما توقعت يكون بهالمستوى! أحسن مني 😂" &nbsp;<span style="color:var(--text3);">— صاحبة متجر، القاهرة</span></span>
+            <span style="font-size:12px;color:var(--text2);flex-shrink:0;">⭐⭐⭐⭐⭐ &nbsp;"قرار ما ندمت عليه أبداً. موفر وسريع!" &nbsp;<span style="color:var(--text3);">— صاحب متجر، دبي</span></span>
+            <span style="font-size:12px;color:var(--text2);flex-shrink:0;">⭐⭐⭐⭐⭐ &nbsp;"كتب لي 3 بوستات عن مطعمي في ثواني 😄" &nbsp;<span style="color:var(--text3);">— صاحب مطعم، عمّان</span></span>
           </div>
-        </div>
-        <div style="display:flex;justify-content:center;gap:6px;margin-top:8px;" id="reviewDots">
-          <span style="width:5px;height:5px;border-radius:50%;background:var(--gold);display:inline-block;cursor:pointer;" onclick="showReview(0)"></span>
-          <span style="width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;cursor:pointer;" onclick="showReview(1)"></span>
-          <span style="width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;cursor:pointer;" onclick="showReview(2)"></span>
-          <span style="width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;cursor:pointer;" onclick="showReview(3)"></span>
-          <span style="width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;cursor:pointer;" onclick="showReview(4)"></span>
-          <span style="width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;cursor:pointer;" onclick="showReview(5)"></span>
         </div>
       </div>
 
@@ -639,6 +610,7 @@ let userRating = 0;
 function showReview(index) {
   if (!track) return;
   currentReview = index;
+  track.style.transition = 'transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
   track.style.transform = `translateX(${index * 100}%)`;
   if (dots) {
     Array.from(dots).forEach((d, i) => {
@@ -652,7 +624,7 @@ function showReview(index) {
 setInterval(() => {
   const total = document.getElementById('reviewTrack')?.children?.length || 6;
   showReview((currentReview + 1) % total);
-}, 4000);
+}, 3500);
 
 function setRating(n) {
   userRating = n;
@@ -730,7 +702,7 @@ document.addEventListener('DOMContentLoaded', loadUserReviews);
   <div class="header">
     <div class="h-brand">مِداد</div>
     <div class="h-badge" id="timerBadge">✅ نشط</div>
-    <button class="btn-logout" onclick="logout()">خروج</button>
+    <button class="btn-logout" onclick="logout()" data-i18n="logout">خروج</button>
   </div>
 
   <main>
@@ -738,95 +710,90 @@ document.addEventListener('DOMContentLoaded', loadUserReviews);
     <div class="stats-bar">
       <div class="stat-item">
         <div class="stat-num" id="statGenerated">0</div>
-        <div class="stat-label">محتوى تم توليده</div>
+        <div class="stat-label" data-i18n="statGenerated">محتوى تم توليده</div>
       </div>
       <div class="stat-item">
         <div class="stat-num" id="statPlatform">📸</div>
-        <div class="stat-label">المنصة الحالية</div>
+        <div class="stat-label" data-i18n="statPlatform">المنصة الحالية</div>
       </div>
       <div class="stat-item">
         <div class="stat-num" id="statToday">0</div>
-        <div class="stat-label">اليوم</div>
+        <div class="stat-label" data-i18n="statToday">اليوم</div>
       </div>
     </div>
 
+    <!-- Language -->
+    <div class="section-label">Language / اللغة</div>
+    <div style="display:flex;gap:8px;margin-bottom:24px;">
+      <button class="p-btn active" id="langAr" onclick="setLang(this,'ar')" style="flex:1;justify-content:center;">🇸🇦 عربي</button>
+      <button class="p-btn" id="langEn" onclick="setLang(this,'en')" style="flex:1;justify-content:center;">🇺🇸 English</button>
+    </div>
+
     <!-- Platform -->
-    <div class="section-label">المنصة</div>
+    <div class="section-label" data-i18n="sectionPlatform">المنصة</div>
     <div class="platforms">
-      <button class="p-btn active" onclick="setPlatform(this,'انستقرام','ig')">
+      <button class="p-btn active" onclick="setPlatform(this,'Instagram','ig')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-        انستقرام
+        <span data-i18n="instagram">انستقرام</span>
       </button>
-      <button class="p-btn" onclick="setPlatform(this,'تيك توك','tt')">
+      <button class="p-btn" onclick="setPlatform(this,'TikTok','tt')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.77 1.52V6.75a4.85 4.85 0 01-1-.06z"/></svg>
-        تيك توك
+        <span data-i18n="tiktok">تيك توك</span>
       </button>
-      <button class="p-btn" onclick="setPlatform(this,'تويتر','x')">
+      <button class="p-btn" onclick="setPlatform(this,'Twitter','x')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        تويتر
+        <span data-i18n="twitter">تويتر</span>
       </button>
-      <button class="p-btn" onclick="setPlatform(this,'واتساب','wa')">
+      <button class="p-btn" onclick="setPlatform(this,'WhatsApp','wa')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        واتساب
+        <span data-i18n="whatsapp">واتساب</span>
       </button>
-      <button class="p-btn" onclick="setPlatform(this,'لينكدإن','li')">
+      <button class="p-btn" onclick="setPlatform(this,'LinkedIn','li')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        لينكدإن
+        <span data-i18n="linkedin">لينكدإن</span>
       </button>
-      <button class="p-btn" onclick="setPlatform(this,'سناب شات','sc')">
+      <button class="p-btn" onclick="setPlatform(this,'Snapchat','sc')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.331 4.209-.014.187.114.35.293.395.167.042.945.212 1.722-.078.139-.05.286-.076.434-.076.111 0 .223.017.327.054.185.063.479.283.484.638.006.404-.396.7-.698.857-.089.046-.289.139-.528.202-.492.134-1.134.2-1.913.2-.162 0-.326-.006-.491-.018-.054.456-.146 1.169-.394 1.939-.186.573-.456 1.088-.804 1.531l.016.014c.18.145.321.302.432.475.283.437.247.978-.094 1.498-.342.521-.908.876-1.549 1.001-.12.023-.24.034-.359.034-.313 0-.625-.082-.908-.244-1.038-.588-2.122-.887-3.222-.887-1.099 0-2.183.299-3.222.887-.283.162-.595.244-.908.244-.119 0-.239-.011-.359-.034-.641-.125-1.207-.48-1.549-1.001-.341-.52-.377-1.061-.094-1.498.111-.173.252-.33.432-.475l.016-.014c-.348-.443-.618-.958-.804-1.531-.248-.77-.34-1.483-.394-1.939a7.9 7.9 0 01-.491.018c-.779 0-1.421-.066-1.913-.2-.239-.063-.439-.156-.528-.202-.302-.157-.704-.453-.698-.857.005-.355.299-.575.484-.638.104-.037.216-.054.327-.054.148 0 .295.026.434.076.777.29 1.555.12 1.722.078a.357.357 0 00.293-.395c-.072-.99-.198-3.016.331-4.209C7.859 1.069 11.216.793 12.206.793z"/></svg>
-        سناب
+        <span data-i18n="snapchat">سناب</span>
       </button>
     </div>
 
     <!-- Content Type -->
-    <div class="section-label">نوع المحتوى</div>
+    <div class="section-label" data-i18n="sectionType">نوع المحتوى</div>
     <div class="types-grid">
-      <div class="t-card active" onclick="setType(this,'بوست')">
-        <span class="t-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </span>
-        <div class="t-name">بوست</div>
+      <div class="t-card active" onclick="setType(this,'Post')">
+        <span class="t-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
+        <div class="t-name" data-i18n="typePost">بوست</div>
       </div>
-      <div class="t-card" onclick="setType(this,'كابشن للصورة')">
-        <span class="t-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        </span>
-        <div class="t-name">كابشن</div>
+      <div class="t-card" onclick="setType(this,'Caption')">
+        <span class="t-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span>
+        <div class="t-name" data-i18n="typeCaption">كابشن</div>
       </div>
-      <div class="t-card" onclick="setType(this,'إعلان ترويجي')">
-        <span class="t-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        </span>
-        <div class="t-name">إعلان</div>
+      <div class="t-card" onclick="setType(this,'Ad')">
+        <span class="t-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
+        <div class="t-name" data-i18n="typeAd">إعلان</div>
       </div>
-      <div class="t-card" onclick="setType(this,'رد على تعليق')">
-        <span class="t-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        </span>
-        <div class="t-name">رد تعليق</div>
+      <div class="t-card" onclick="setType(this,'Reply')">
+        <span class="t-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+        <div class="t-name" data-i18n="typeReply">رد تعليق</div>
       </div>
-      <div class="t-card" onclick="setType(this,'قصة / ستوري')">
-        <span class="t-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </span>
-        <div class="t-name">ستوري</div>
+      <div class="t-card" onclick="setType(this,'Story')">
+        <span class="t-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+        <div class="t-name" data-i18n="typeStory">ستوري</div>
       </div>
-      <div class="t-card" onclick="setType(this,'هاشتاقات')">
-        <span class="t-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
-        </span>
-        <div class="t-name">هاشتاقات</div>
+      <div class="t-card" onclick="setType(this,'Hashtags')">
+        <span class="t-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg></span>
+        <div class="t-name" data-i18n="typeHashtags">هاشتاقات</div>
       </div>
     </div>
 
     <!-- Input -->
     <div class="input-box">
-      <label class="field-label">صف منتجك أو خدمتك أو موضوعك</label>
+      <label class="field-label" data-i18n="fieldLabel">صف منتجك أو خدمتك أو موضوعك</label>
       <textarea class="text-field" id="topicInput" placeholder="مثال: متجر عبايات فاخرة، عرض خاص خصم 30% على جميع التشكيلات الجديدة لهذا الموسم..." rows="3"></textarea>
 
       <div class="count-row">
-        <span class="count-label">عدد النسخ:</span>
+        <span class="count-label" data-i18n="countLabel">عدد النسخ:</span>
         <div class="count-btns">
           <button class="count-btn active" onclick="setCount(this,1)">1</button>
           <button class="count-btn" onclick="setCount(this,2)">2</button>
@@ -835,19 +802,19 @@ document.addEventListener('DOMContentLoaded', loadUserReviews);
       </div>
 
       <div>
-        <label class="field-label" style="margin-top:12px;">أسلوب الكتابة</label>
+        <label class="field-label" style="margin-top:12px;" data-i18n="toneLabel">أسلوب الكتابة</label>
         <div class="tone-row">
-          <button class="tone-btn active" onclick="setTone(this,'احترافي')">احترافي</button>
-          <button class="tone-btn" onclick="setTone(this,'ودي ومحبب')">ودي</button>
-          <button class="tone-btn" onclick="setTone(this,'مرح وخفيف')">مرح</button>
-          <button class="tone-btn" onclick="setTone(this,'مقنع وبيعي')">مقنع</button>
-          <button class="tone-btn" onclick="setTone(this,'عاطفي وملهم')">ملهم</button>
-          <button class="tone-btn" onclick="setTone(this,'فخم وراقي')">فخم</button>
+          <button class="tone-btn active" onclick="setTone(this,'Professional')" data-i18n="tonePro">احترافي</button>
+          <button class="tone-btn" onclick="setTone(this,'Friendly')" data-i18n="toneFriendly">ودي</button>
+          <button class="tone-btn" onclick="setTone(this,'Fun')" data-i18n="toneFun">مرح</button>
+          <button class="tone-btn" onclick="setTone(this,'Persuasive')" data-i18n="tonePersuasive">مقنع</button>
+          <button class="tone-btn" onclick="setTone(this,'Inspiring')" data-i18n="toneInspiring">ملهم</button>
+          <button class="tone-btn" onclick="setTone(this,'Luxury')" data-i18n="toneLuxury">فخم</button>
         </div>
       </div>
     </div>
 
-    <button class="btn-generate" id="generateBtn" onclick="generate()">
+    <button class="btn-generate" id="generateBtn" onclick="generate()" data-i18n="generateBtn">
       ✨ ولّد المحتوى الآن
     </button>
 
@@ -858,9 +825,56 @@ document.addEventListener('DOMContentLoaded', loadUserReviews);
 <script>
 let platform = 'انستقرام';
 let platformIcon = '📸';
+let currentLang = localStorage.getItem('midaad_lang') || 'ar';
 let contentType = 'بوست';
 let tone = 'احترافي';
 let count = 1;
+
+function setLang(el, l) {
+  document.querySelectorAll('#langAr,#langEn,#langOther').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentLang = l;
+  localStorage.setItem('midaad_lang', l);
+  const topicInput = document.getElementById('topicInput');
+  if (topicInput) {
+    if (l === 'en') topicInput.placeholder = 'Example: Luxury abaya store, 30% discount on all new collections...';
+    else if (l === 'other') topicInput.placeholder = 'Write your topic in your language...';
+    else topicInput.placeholder = 'مثال: متجر عبايات فاخرة، خصم 30% على جميع التشكيلات الجديدة لهذا الموسم...';
+  }
+  updateUI(l);
+}
+
+const i18n = {
+  ar: {
+    logout: 'خروج', statGenerated: 'محتوى تم توليده', statPlatform: 'المنصة الحالية', statToday: 'اليوم',
+    sectionPlatform: 'المنصة', sectionType: 'نوع المحتوى', sectionLang: 'Language / اللغة',
+    fieldLabel: 'صف منتجك أو خدمتك أو موضوعك', countLabel: 'عدد النسخ:', toneLabel: 'أسلوب الكتابة',
+    generateBtn: '✨ ولّد المحتوى الآن', generating: '⏳ مِداد يكتب لك...',
+    instagram: 'انستقرام', tiktok: 'تيك توك', twitter: 'تويتر', whatsapp: 'واتساب', linkedin: 'لينكدإن', snapchat: 'سناب',
+    typePost: 'بوست', typeCaption: 'كابشن', typeAd: 'إعلان', typeReply: 'رد تعليق', typeStory: 'ستوري', typeHashtags: 'هاشتاقات',
+    tonePro: 'احترافي', toneFriendly: 'ودي', toneFun: 'مرح', tonePersuasive: 'مقنع', toneInspiring: 'ملهم', toneLuxury: 'فخم',
+  },
+  en: {
+    logout: 'Logout', statGenerated: 'Content Generated', statPlatform: 'Current Platform', statToday: 'Today',
+    sectionPlatform: 'Platform', sectionType: 'Content Type', sectionLang: 'Language / اللغة',
+    fieldLabel: 'Describe your product, service or topic', countLabel: 'Versions:', toneLabel: 'Writing Style',
+    generateBtn: '✨ Generate Content Now', generating: '⏳ Midaad is writing...',
+    instagram: 'Instagram', tiktok: 'TikTok', twitter: 'Twitter', whatsapp: 'WhatsApp', linkedin: 'LinkedIn', snapchat: 'Snapchat',
+    typePost: 'Post', typeCaption: 'Caption', typeAd: 'Ad', typeReply: 'Reply', typeStory: 'Story', typeHashtags: 'Hashtags',
+    tonePro: 'Professional', toneFriendly: 'Friendly', toneFun: 'Fun', tonePersuasive: 'Persuasive', toneInspiring: 'Inspiring', toneLuxury: 'Luxury',
+  }
+};
+
+function updateUI(l) {
+  const t = i18n[l] || i18n.ar;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) el.textContent = t[key];
+  });
+  const btn = document.getElementById('generateBtn');
+  if (btn && !btn.disabled) btn.innerHTML = t.generateBtn;
+  document.documentElement.dir = l === 'en' ? 'ltr' : 'rtl';
+}
 let totalGenerated = parseInt(localStorage.getItem('midaad_total') || '0');
 let todayGenerated = parseInt(localStorage.getItem('midaad_today') || '0');
 
@@ -946,6 +960,7 @@ function showApp() {
   document.getElementById('app').style.flexDirection = 'column';
   updateBadge();
   updateStats();
+  updateUI(currentLang);
 
   const logoutBtn = document.querySelector('.btn-logout');
   if (logoutBtn) {
@@ -1033,7 +1048,9 @@ async function generate() {
       body: JSON.stringify({
         topic, platform, contentType, tone, count,
         code: localStorage.getItem('midaad_code') || 'FREE',
-        deviceId: getDeviceId()
+        deviceId: getDeviceId(),
+        lang: currentLang,
+        language: currentLang
       })
     });
 
