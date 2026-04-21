@@ -7,6 +7,7 @@ module.exports = async function handler(req, res) {
 
   const { topic, platform, contentType, tone, count, code, deviceId, lang } = req.body;
   const language = lang || 'ar';
+  console.log('Language received:', language, '| Lang:', lang);
 
   const KV_URL = process.env.KV_REST_API_URL;
   const KV_TOKEN = process.env.KV_REST_API_TOKEN;
@@ -118,7 +119,7 @@ ${numVersions > 1 ? `اكتب هكذا:\nالنسخة 1:\n[المحتوى]\nال
 
     let results = [];
     if (numVersions > 1) {
-      results = text.split(/النسخة \d+:/g).filter(p => p.trim());
+      results = text.split(/(?:النسخة|Version)\s*\d+:/g).filter(p => p.trim());
     } else {
       results = [text.trim()];
     }
