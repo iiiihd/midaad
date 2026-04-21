@@ -852,6 +852,13 @@ const i18n = {
     instagram: 'انستقرام', tiktok: 'تيك توك', twitter: 'تويتر', whatsapp: 'واتساب', linkedin: 'لينكدإن', snapchat: 'سناب',
     typePost: 'بوست', typeCaption: 'كابشن', typeAd: 'إعلان', typeReply: 'رد تعليق', typeStory: 'ستوري', typeHashtags: 'هاشتاقات',
     tonePro: 'احترافي', toneFriendly: 'ودي', toneFun: 'مرح', tonePersuasive: 'مقنع', toneInspiring: 'ملهم', toneLuxury: 'فخم',
+    popupBack: '← رجوع', popupTitle: 'انبهرت بالنتيجة؟',
+    popupDesc: 'انتهت توليداتك المجانية الـ 3<br>اشترك الآن واحصل على <b style="color:var(--gold);">30 توليد يومياً</b>',
+    popupPeriod: 'شهرياً — يعادل 60 ريال فقط',
+    popupSubscribeBtn: '✨ اشترك الآن واحصل على كودك',
+    popupHaveCode: 'لديك كود؟', popupEnterBtn: 'دخول ←', popupError: '❌ كود غير صحيح',
+    popupReviewsTitle: '⭐ ماذا يقول عملاؤنا', popupShareReview: 'شاركنا تجربتك ⭐',
+    popupSubmitReview: 'إرسال التقييم ✨', popupReviewSuccess: '✅ شكراً على تقييمك!',
   },
   en: {
     logout: 'Logout', statGenerated: 'Content Generated', statPlatform: 'Current Platform', statToday: 'Today',
@@ -861,6 +868,13 @@ const i18n = {
     instagram: 'Instagram', tiktok: 'TikTok', twitter: 'Twitter', whatsapp: 'WhatsApp', linkedin: 'LinkedIn', snapchat: 'Snapchat',
     typePost: 'Post', typeCaption: 'Caption', typeAd: 'Ad', typeReply: 'Reply', typeStory: 'Story', typeHashtags: 'Hashtags',
     tonePro: 'Professional', toneFriendly: 'Friendly', toneFun: 'Fun', tonePersuasive: 'Persuasive', toneInspiring: 'Inspiring', toneLuxury: 'Luxury',
+    popupBack: 'Back →', popupTitle: 'Amazed by the results?',
+    popupDesc: 'Your 3 free generations are up.<br>Subscribe now and get <b style="color:var(--gold);">30 generations daily</b>',
+    popupPeriod: 'Monthly — just $14.99',
+    popupSubscribeBtn: '✨ Subscribe Now & Get Your Code',
+    popupHaveCode: 'Have a code?', popupEnterBtn: 'Enter →', popupError: '❌ Invalid code',
+    popupReviewsTitle: '⭐ What our users say', popupShareReview: 'Share your experience ⭐',
+    popupSubmitReview: 'Submit Review ✨', popupReviewSuccess: '✅ Thank you for your review!',
   }
 };
 
@@ -870,6 +884,17 @@ function updateUI(l) {
     const key = el.getAttribute('data-i18n');
     if (t[key] !== undefined) el.innerHTML = t[key];
   });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    const placeholders = {
+      popupReviewPlaceholder: { ar: 'اكتب تجربتك...', en: 'Write your experience...' },
+      popupJobPlaceholder: { ar: 'مهنتك', en: 'Your job' },
+      popupCityPlaceholder: { ar: 'مدينتك', en: 'Your city' },
+    };
+    if (placeholders[key]) el.placeholder = placeholders[key][l] || placeholders[key].ar;
+  });
+  const codeInput = document.getElementById('popupCodeInput');
+  if (codeInput) codeInput.placeholder = l === 'en' ? 'Enter your access code' : 'أدخل كود الدخول';
   document.documentElement.dir = l === 'en' ? 'ltr' : 'rtl';
   document.getElementById('topicInput')?.setAttribute('dir', l === 'en' ? 'ltr' : 'rtl');
 }
@@ -1270,45 +1295,44 @@ function openPaddleCheckout() {
   <div style="background:var(--surface);border:1px solid var(--border2);border-radius:24px;padding:28px;max-width:380px;width:100%;text-align:center;position:relative;margin:auto;">
     <div style="position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
     
-    <!-- زر الرجوع -->
-    <button onclick="hideSubscribePopup()" style="position:absolute;top:14px;right:14px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:12px;color:var(--text3);cursor:pointer;font-family:inherit;">← رجوع</button>
+    <button onclick="hideSubscribePopup()" style="position:absolute;top:14px;right:14px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:12px;color:var(--text3);cursor:pointer;font-family:inherit;" data-i18n="popupBack">← رجوع</button>
 
     <div style="font-size:36px;margin-bottom:10px;">🔥</div>
-    <h2 style="font-size:18px;font-weight:900;color:var(--gold2);margin-bottom:6px;">انبهرت بالنتيجة؟</h2>
-    <p style="font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.7;">انتهت توليداتك المجانية الـ 3<br>اشترك الآن واحصل على <b style="color:var(--gold);">30 توليد يومياً</b></p>
+    <h2 style="font-size:18px;font-weight:900;color:var(--gold2);margin-bottom:6px;" data-i18n="popupTitle">انبهرت بالنتيجة؟</h2>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.7;" data-i18n="popupDesc">انتهت توليداتك المجانية الـ 3<br>اشترك الآن واحصل على <b style="color:var(--gold);">30 توليد يومياً</b></p>
 
     <div style="background:var(--card);border-radius:12px;padding:12px;margin-bottom:16px;">
       <div style="font-size:28px;font-weight:900;color:var(--gold2);">$14.99</div>
-      <div style="font-size:11px;color:var(--text3);">شهرياً — يعادل 60 ريال فقط</div>
+      <div style="font-size:11px;color:var(--text3);" data-i18n="popupPeriod">شهرياً — يعادل 60 ريال فقط</div>
     </div>
 
-    <button onclick="openPaddleCheckout();hideSubscribePopup();" style="width:100%;background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:14px;">✨ اشترك الآن واحصل على كودك</button>
+    <button onclick="openPaddleCheckout();hideSubscribePopup();" style="width:100%;background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:14px;" data-i18n="popupSubscribeBtn">✨ اشترك الآن واحصل على كودك</button>
 
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
       <div style="flex:1;height:1px;background:var(--border);"></div>
-      <span style="font-size:11px;color:var(--text3);">لديك كود؟</span>
+      <span style="font-size:11px;color:var(--text3);" data-i18n="popupHaveCode">لديك كود؟</span>
       <div style="flex:1;height:1px;background:var(--border);"></div>
     </div>
 
     <input type="text" id="popupCodeInput" class="code-field" placeholder="أدخل كود الدخول" maxlength="10" autocomplete="off" autocapitalize="characters" spellcheck="false" style="margin-bottom:8px;">
-    <button onclick="checkCodeFromPopup()" style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:12px;padding:11px;font-size:13px;font-weight:700;color:var(--text);cursor:pointer;font-family:inherit;margin-bottom:6px;">دخول ←</button>
-    <p id="popupError" style="display:none;color:var(--red);font-size:11px;margin-bottom:10px;text-align:center;">❌ كود غير صحيح</p>
+    <button onclick="checkCodeFromPopup()" style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:12px;padding:11px;font-size:13px;font-weight:700;color:var(--text);cursor:pointer;font-family:inherit;margin-bottom:6px;" data-i18n="popupEnterBtn">دخول ←</button>
+    <p id="popupError" style="display:none;color:var(--red);font-size:11px;margin-bottom:10px;text-align:center;" data-i18n="popupError">❌ كود غير صحيح</p>
 
     <!-- تقييمات متحركة -->
     <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
-      <div style="font-size:10px;color:var(--text3);margin-bottom:8px;">⭐ ماذا يقول عملاؤنا</div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:8px;" data-i18n="popupReviewsTitle">⭐ ماذا يقول عملاؤنا</div>
       <div style="overflow:hidden;">
         <div id="popupReviewInner" style="transition:transform 0.5s ease;">
-          <div class="popup-review" style="font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;">"وفّر علي ساعات يومياً! أنشر على كل المنصات بدقائق." ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— صاحب متجر، جدة</span></div>
-          <div class="popup-review" style="font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;margin-top:8px;">"كنت أدفع 1500 ريال لكاتب محتوى، الحين مِداد يسوي نفس الشغل!" ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— صاحب مطعم، الرياض</span></div>
-          <div class="popup-review" style="font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;margin-top:8px;">"أفضل استثمار لمتجري! المحتوى احترافي ومناسب لكل منصة." ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— مصممة أزياء، الكويت</span></div>
+          <div class="popup-review" style="font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;">"Saved me hours daily! Now I post on all platforms in minutes." ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— Store Owner, Jeddah</span></div>
+          <div class="popup-review" style="font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;margin-top:8px;">"Best investment for my business! Professional content for every platform." ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— Fashion Designer, Kuwait</span></div>
+          <div class="popup-review" style="font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;margin-top:8px;">"Amazing results! Writes better content than I ever could." ⭐⭐⭐⭐⭐<br><span style="font-size:10px;color:var(--text3);">— Restaurant Owner, Dubai</span></div>
         </div>
       </div>
     </div>
 
     <!-- خانة إضافة تقييم -->
     <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
-      <div style="font-size:10px;color:var(--text3);margin-bottom:8px;text-align:center;">شاركنا تجربتك ⭐</div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:8px;text-align:center;" data-i18n="popupShareReview">شاركنا تجربتك ⭐</div>
       <div id="popupStars" style="display:flex;justify-content:center;gap:6px;margin-bottom:8px;font-size:18px;cursor:pointer;">
         <span onclick="setPopupRating(1)" class="pstar">☆</span>
         <span onclick="setPopupRating(2)" class="pstar">☆</span>
@@ -1316,13 +1340,13 @@ function openPaddleCheckout() {
         <span onclick="setPopupRating(4)" class="pstar">☆</span>
         <span onclick="setPopupRating(5)" class="pstar">☆</span>
       </div>
-      <textarea id="popupReviewText" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px;font-size:12px;color:var(--text);font-family:inherit;resize:none;min-height:45px;outline:none;margin-bottom:4px;" placeholder="اكتب تجربتك..."></textarea>
+      <textarea id="popupReviewText" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px;font-size:12px;color:var(--text);font-family:inherit;resize:none;min-height:45px;outline:none;margin-bottom:4px;" data-i18n-placeholder="popupReviewPlaceholder" placeholder="اكتب تجربتك..."></textarea>
       <div style="display:flex;gap:6px;margin-bottom:6px;">
-        <input id="popupJob" type="text" style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px;font-size:11px;color:var(--text);font-family:inherit;outline:none;" placeholder="مهنتك">
-        <input id="popupCity" type="text" style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px;font-size:11px;color:var(--text);font-family:inherit;outline:none;" placeholder="مدينتك">
+        <input id="popupJob" type="text" style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px;font-size:11px;color:var(--text);font-family:inherit;outline:none;" data-i18n-placeholder="popupJobPlaceholder" placeholder="مهنتك">
+        <input id="popupCity" type="text" style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px;font-size:11px;color:var(--text);font-family:inherit;outline:none;" data-i18n-placeholder="popupCityPlaceholder" placeholder="مدينتك">
       </div>
-      <button onclick="submitPopupReview()" style="width:100%;background:var(--gold-dim);border:1px solid var(--border2);border-radius:10px;padding:8px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;">إرسال التقييم ✨</button>
-      <p id="popupReviewSuccess" style="display:none;text-align:center;font-size:11px;color:var(--green);margin-top:6px;">✅ شكراً على تقييمك!</p>
+      <button onclick="submitPopupReview()" style="width:100%;background:var(--gold-dim);border:1px solid var(--border2);border-radius:10px;padding:8px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;" data-i18n="popupSubmitReview">إرسال التقييم ✨</button>
+      <p id="popupReviewSuccess" style="display:none;text-align:center;font-size:11px;color:var(--green);margin-top:6px;" data-i18n="popupReviewSuccess">✅ شكراً على تقييمك!</p>
     </div>
   </div>
 </div>
