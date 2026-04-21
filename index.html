@@ -1245,14 +1245,25 @@ async function submitPopupReview() {
       document.getElementById('popupCity').value = '';
       setPopupRating(0);
       popupRating = 0;
-      // أضف التقييم في الـ popup مباشرة
+      // أضف التقييم في الـ popup بنفس التصميم
       const inner = document.getElementById('popupReviewInner');
       if (inner) {
         const div = document.createElement('div');
         div.className = 'popup-review';
-        div.style.cssText = 'font-size:12px;color:var(--text2);line-height:1.6;padding:8px;background:var(--card);border-radius:10px;margin-top:8px;';
-        div.innerHTML = `"${text}" ${'⭐'.repeat(popupRating || 5)}<br><span style="font-size:10px;color:var(--text3);">— ${job || (currentLang === 'en' ? 'Midaad User' : 'عميل مِداد')}${city ? '، ' + city : ''}</span>`;
+        div.style.cssText = 'min-width:100%;background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.02));border:1px solid rgba(201,168,76,0.2);border-radius:14px;padding:14px;position:relative;overflow:hidden;';
+        div.innerHTML = `
+          <div style="position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+          <div style="font-size:18px;color:var(--gold);margin-bottom:6px;">${'⭐'.repeat(popupRating || 5)}</div>
+          <p style="font-size:12px;color:var(--text);line-height:1.7;margin-bottom:8px;font-style:italic;">"${text}"</p>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--gold-dim);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;">✍️</div>
+            <div style="text-align:${currentLang === 'en' ? 'left' : 'right'};">
+              <div style="font-size:11px;font-weight:700;color:var(--text);">${job || (currentLang === 'en' ? 'Midaad User' : 'عميل مِداد')}</div>
+              <div style="font-size:10px;color:var(--text3);">${city || ''}</div>
+            </div>
+          </div>`;
         inner.appendChild(div);
+        showPopupReview(inner.children.length - 1);
       }
     }
   } catch(e) {}
