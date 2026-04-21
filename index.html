@@ -932,6 +932,20 @@ function updateUI(l) {
   if (codeInput) codeInput.placeholder = l === 'en' ? 'Enter your access code' : 'أدخل كود الدخول';
   document.documentElement.dir = l === 'en' ? 'ltr' : 'rtl';
   document.getElementById('topicInput')?.setAttribute('dir', l === 'en' ? 'ltr' : 'rtl');
+
+  // حدّث شارة التجربة المجانية
+  if (!localStorage.getItem('midaad_code')) {
+    const freeUsed = parseInt(localStorage.getItem('midaad_free_used') || '0');
+    const badge = document.getElementById('timerBadge');
+    if (badge) {
+      const remaining = Math.max(0, 3 - freeUsed);
+      if (remaining > 0) {
+        badge.textContent = l === 'en' ? remaining === 3 ? '✨ 3 Free Trials' : `🎁 ${remaining} Trial${remaining === 1 ? '' : 's'} Left` : remaining === 3 ? '✨ 3 تجارب مجانية' : `🎁 ${remaining} تجربة متبقية`;
+      } else {
+        badge.textContent = l === 'en' ? '🔒 Free Trial Ended' : '🔒 انتهت التجربة المجانية';
+      }
+    }
+  }
 }
 let totalGenerated = parseInt(localStorage.getItem('midaad_total') || '0');
 let todayGenerated = parseInt(localStorage.getItem('midaad_today') || '0');
@@ -1146,10 +1160,13 @@ async function generate() {
         localStorage.setItem('midaad_free_used', freeUsed);
         const badge = document.getElementById('timerBadge');
         const remaining = 3 - freeUsed;
+        const isEn = currentLang === 'en';
         if (remaining > 0) {
-          badge.textContent = `🎁 ${remaining} مجاناً`;
+          badge.textContent = isEn ? remaining === 3 ? '✨ 3 Free Trials' : `🎁 ${remaining} Trial${remaining === 1 ? '' : 's'} Left` : remaining === 3 ? '✨ 3 تجارب مجانية' : `🎁 ${remaining} تجربة متبقية`;
         } else {
-          badge.textContent = '🔒 انتهت التجربة';
+          badge.textContent = isEn ? '🔒 Free Trial Ended' : '🔒 انتهت التجربة المجانية';
+          badge.style.background = 'rgba(248,113,113,0.1)';
+          badge.style.borderColor = 'rgba(248,113,113,0.3)';
           badge.style.color = 'var(--red)';
           setTimeout(showSubscribePopup, 1500);
         }
@@ -1186,10 +1203,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const badge = document.getElementById('timerBadge');
     if (badge) {
       const remaining = Math.max(0, 3 - freeUsed);
-      badge.textContent = remaining > 0 ? `🎁 ${remaining} مجاناً` : '🔒 انتهت';
-      badge.style.background = 'rgba(52,211,153,0.1)';
-      badge.style.borderColor = 'rgba(52,211,153,0.3)';
-      badge.style.color = '#34D399';
+      const isEn = currentLang === 'en';
+      if (remaining > 0) {
+        badge.textContent = isEn ? remaining === 3 ? '✨ 3 Free Trials' : `🎁 ${remaining} Trial${remaining === 1 ? '' : 's'} Left` : remaining === 3 ? '✨ 3 تجارب مجانية' : `🎁 ${remaining} تجربة متبقية`;
+        badge.style.background = 'rgba(52,211,153,0.1)';
+        badge.style.borderColor = 'rgba(52,211,153,0.3)';
+        badge.style.color = '#34D399';
+      } else {
+        badge.textContent = isEn ? '🔒 Free Trial Ended' : '🔒 انتهت التجربة المجانية';
+        badge.style.background = 'rgba(248,113,113,0.1)';
+        badge.style.borderColor = 'rgba(248,113,113,0.3)';
+        badge.style.color = 'var(--red)';
+      }
     }
   }
 
