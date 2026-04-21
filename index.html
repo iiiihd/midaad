@@ -790,7 +790,7 @@ document.addEventListener('DOMContentLoaded', loadUserReviews);
     <!-- Input -->
     <div class="input-box">
       <!-- زر جرّب مثالاً -->
-      <button id="tryExampleBtn" onclick="tryExample()" style="width:100%;margin-bottom:10px;background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.04));border:1.5px dashed rgba(201,168,76,0.5);border-radius:12px;padding:11px;font-size:13px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;transition:all 0.2s;" onmouseover="this.style.background='rgba(201,168,76,0.15)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.04))'" data-i18n="tryExampleBtn">
+      <button id="tryExampleBtn" onclick="trackEvent('try_example'); tryExample();" style="width:100%;margin-bottom:10px;background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.04));border:1.5px dashed rgba(201,168,76,0.5);border-radius:12px;padding:11px;font-size:13px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;transition:all 0.2s;" onmouseover="this.style.background='rgba(201,168,76,0.15)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.04))'" data-i18n="tryExampleBtn">
         🚀 جرّب مثالاً الآن — مجاناً!
       </button>
       <label class="field-label" data-i18n="fieldLabel">صف منتجك أو خدمتك أو موضوعك</label>
@@ -818,7 +818,7 @@ document.addEventListener('DOMContentLoaded', loadUserReviews);
       </div>
     </div>
 
-    <button class="btn-generate" id="generateBtn" onclick="generate()" data-i18n="generateBtn">
+    <button class="btn-generate" id="generateBtn" onclick="trackEvent('generate_content'); generate();" data-i18n="generateBtn">
       ✨ ولّد المحتوى الآن
     </button>
 
@@ -833,6 +833,11 @@ let currentLang = localStorage.getItem('midaad_lang') || 'ar';
 let contentType = 'بوست';
 let tone = 'احترافي';
 let count = 1;
+
+function trackEvent(name) {
+  try { window.va && window.va('event', { name }); } catch(e) {}
+  try { window.gtag && window.gtag('event', name); } catch(e) {}
+}
 
 const examples = {
   ar: [
@@ -1409,7 +1414,7 @@ function openPaddleCheckout() {
       <div style="font-size:11px;color:var(--text3);" data-i18n="popupPeriod">شهرياً — يعادل 60 ريال فقط</div>
     </div>
 
-    <button onclick="openPaddleCheckout();hideSubscribePopup();" style="width:100%;background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:14px;" data-i18n="popupSubscribeBtn">✨ اشترك الآن واحصل على كودك</button>
+    <button onclick="trackEvent('subscribe_click'); openPaddleCheckout();hideSubscribePopup();" style="width:100%;background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:14px;" data-i18n="popupSubscribeBtn">✨ اشترك الآن واحصل على كودك</button>
 
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
       <div style="flex:1;height:1px;background:var(--border);"></div>
