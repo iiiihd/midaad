@@ -697,6 +697,28 @@ async function loadUserReviews() {
 }
 
 document.addEventListener('DOMContentLoaded', loadUserReviews);
+
+async function loadTickerReviews() {
+  try {
+    const res = await fetch('/api/reviews');
+    const data = await res.json();
+    if (!data.reviews?.length) return;
+    const ticker = document.getElementById('reviewTicker');
+    if (!ticker) return;
+    const stars = (n) => '⭐'.repeat(n);
+    data.reviews.forEach(r => {
+      const span1 = document.createElement('span');
+      span1.style.cssText = 'font-size:12px;color:var(--text2);flex-shrink:0;';
+      span1.innerHTML = `${stars(r.rating)} &nbsp;"${r.text}" &nbsp;<span style="color:var(--text3);">— ${r.job || 'عميل مِداد'}${r.city ? '، ' + r.city : ''}</span>`;
+      ticker.appendChild(span1);
+      // نسخة ثانية للحلقة
+      const span2 = span1.cloneNode(true);
+      ticker.appendChild(span2);
+    });
+  } catch(e) {}
+}
+
+document.addEventListener('DOMContentLoaded', loadTickerReviews);
 </script>
 
 <!-- APP -->
