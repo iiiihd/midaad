@@ -294,10 +294,12 @@ body::after{
 main{flex:1;padding:20px 16px 40px;max-width:680px;margin:0 auto;width:100%;}
 
 .section-label{
-  font-size:10px;font-weight:700;
-  color:var(--text3);
-  text-transform:uppercase;letter-spacing:2px;
+  font-size:12px;font-weight:800;
+  color:var(--text2);
+  text-transform:uppercase;letter-spacing:1.5px;
   margin-bottom:10px;
+  padding-right:8px;
+  border-right:3px solid var(--gold);
 }
 
 /* Platform tabs */
@@ -361,7 +363,7 @@ main{flex:1;padding:20px 16px 40px;max-width:680px;margin:0 auto;width:100%;}
 }
 .input-box:focus-within{border-color:rgba(201,168,76,0.3);}
 
-.field-label{font-size:11px;color:var(--text3);margin-bottom:8px;display:block;font-weight:600;}
+.field-label{font-size:12px;color:var(--text2);margin-bottom:8px;display:block;font-weight:700;letter-spacing:0.5px;}
 
 .text-field{
   width:100%;
@@ -382,7 +384,7 @@ main{flex:1;padding:20px 16px 40px;max-width:680px;margin:0 auto;width:100%;}
   display:flex;align-items:center;gap:8px;
   margin-top:12px;
 }
-.count-label{font-size:11px;color:var(--text3);font-weight:600;}
+.count-label{font-size:12px;color:var(--text2);font-weight:700;letter-spacing:0.5px;}
 .count-btns{display:flex;gap:4px;margin-right:auto;}
 .count-btn{
   width:30px;height:30px;
@@ -706,6 +708,26 @@ document.addEventListener('DOMContentLoaded', loadUserReviews);
   </div>
 
   <main>
+    <!-- Hero Banner -->
+    <div id="heroBanner" style="background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.02));border:1px solid rgba(201,168,76,0.2);border-radius:16px;padding:16px;margin-bottom:20px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+      
+      <h1 id="heroTitle" style="font-size:16px;font-weight:900;color:var(--gold2);margin-bottom:4px;line-height:1.5;text-align:center;">اكتب موضوعك ← احصل على بوست احترافي في ثوانٍ</h1>
+      <p id="heroSub" style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7;text-align:center;">6 منصات • 6 أنواع محتوى • عربي وإنجليزي</p>
+      
+      <div style="display:flex;gap:8px;justify-content:center;">
+        <button id="heroCTA" onclick="trackEvent('hero_try'); tryExample();" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          <span id="heroCTAText">جرّب مثالاً مجاناً</span>
+        </button>
+        <button onclick="window.open('https://youtube.com/shorts/f0cN_oRu-wI','_blank'); trackEvent('watch_video');" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--text2);display:flex;align-items:center;gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span id="heroWatch">شاهد كيف يعمل</span>
+        </button>
+      </div>
+      <p id="heroFree" style="font-size:10px;color:var(--text3);margin-top:8px;text-align:center;">3 تجارب مجانية • بدون بطاقة بنكية • بدون تسجيل</p>
+    </div>
+
     <!-- Stats -->
     <div class="stats-bar">
       <div class="stat-item">
@@ -827,8 +849,8 @@ document.addEventListener('DOMContentLoaded', loadUserReviews);
 </div>
 
 <script>
-let platform = 'انستقرام';
-let platformIcon = '📸';
+let platform = 'Instagram';
+let platformIcon = 'ig';
 let currentLang = localStorage.getItem('midaad_lang') || 'ar';
 let contentType = 'بوست';
 let tone = 'احترافي';
@@ -934,6 +956,19 @@ function updateUI(l) {
   
   const codeInput = document.getElementById('popupCodeInput');
   if (codeInput) codeInput.placeholder = l === 'en' ? 'Enter your access code' : 'أدخل كود الدخول';
+  // حدّث الـ Hero Banner
+  const heroTitle = document.getElementById('heroTitle');
+  const heroSub = document.getElementById('heroSub');
+  const heroCTA = document.getElementById('heroCTA');
+  const heroFree = document.getElementById('heroFree');
+  if (heroTitle) heroTitle.textContent = l === 'en' ? 'Type your topic → Pro content in seconds' : 'اكتب موضوعك ← احصل على بوست احترافي في ثوانٍ';
+  if (heroSub) heroSub.textContent = l === 'en' ? '6 Platforms • 6 Content Types • Arabic & English' : '6 منصات • 6 أنواع محتوى • عربي وإنجليزي';
+  const heroCTAText = document.getElementById('heroCTAText');
+  if (heroCTAText) heroCTAText.textContent = l === 'en' ? 'Try an Example Free' : 'جرّب مثالاً مجاناً';
+  if (heroFree) heroFree.textContent = l === 'en' ? '3 free trials • No credit card • No signup' : '3 تجارب مجانية • بدون بطاقة بنكية • بدون تسجيل';
+  const heroWatch = document.getElementById('heroWatch');
+  if (heroWatch) heroWatch.textContent = l === 'en' ? 'Watch how it works' : 'شاهد كيف يعمل';
+
   document.documentElement.dir = l === 'en' ? 'ltr' : 'rtl';
   document.getElementById('topicInput')?.setAttribute('dir', l === 'en' ? 'ltr' : 'rtl');
 
@@ -959,7 +994,7 @@ function setPlatform(el, p, icon) {
   el.classList.add('active');
   platform = p;
   platformIcon = icon;
-  document.getElementById('statPlatform').textContent = icon;
+  document.getElementById('statPlatform').textContent = p;
 }
 
 function setType(el, t) {
@@ -1089,7 +1124,7 @@ function updateBadge() {
 function updateStats() {
   document.getElementById('statGenerated').textContent = totalGenerated;
   document.getElementById('statToday').textContent = todayGenerated;
-  document.getElementById('statPlatform').textContent = platformIcon;
+  document.getElementById('statPlatform').textContent = platform;
 }
 
 function logout() {
@@ -1522,3 +1557,26 @@ function openPaddleCheckout() {
     </div>
   </div>
 </div>
+
+
+<!-- VIDEO POPUP -->
+<div id="videoPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+  <div style="width:100%;max-width:340px;position:relative;">
+    <button onclick="closeVideoPopup()" style="position:absolute;top:-44px;right:0;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;line-height:1;">✕</button>
+    <div style="border-radius:16px;overflow:hidden;background:#000;">
+      <iframe id="tiktokFrame" src="" width="100%" height="580" style="border:none;display:block;" allowfullscreen></iframe>
+    </div>
+    <p style="text-align:center;color:rgba(255,255,255,0.4);font-size:11px;margin-top:10px;font-family:inherit;">مِداد — مولد المحتوى الذكي</p>
+  </div>
+</div>
+<script>
+function openVideoPopup() {
+  document.getElementById('videoPopup').style.display = 'flex';
+  document.getElementById('tiktokFrame').src = 'https://www.youtube-nocookie.com/embed/f0cN_oRu-wI?autoplay=1&rel=0&playsinline=1';
+  trackEvent('watch_video');
+}
+function closeVideoPopup() {
+  document.getElementById('videoPopup').style.display = 'none';
+  document.getElementById('tiktokFrame').src = '';
+}
+</script>
