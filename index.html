@@ -704,6 +704,10 @@ document.addEventListener('DOMContentLoaded', loadUserReviews);
   <div class="header">
     <div class="h-brand">مِداد</div>
     <div class="h-badge" id="timerBadge">✅ نشط</div>
+    <button id="libraryBtn" onclick="openLibrary()" style="background:none;border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;gap:4px;color:var(--text3);">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span id="libraryBtnText">مكتبتي</span>
+    </button>
     <button class="btn-logout" onclick="logout()" data-i18n="logout">خروج</button>
   </div>
 
@@ -910,7 +914,7 @@ const i18n = {
     typePost: 'بوست', typeCaption: 'كابشن', typeAd: 'إعلان', typeReply: 'رد تعليق', typeStory: 'ستوري', typeHashtags: 'هاشتاقات',
     tonePro: 'احترافي', toneFriendly: 'ودي', toneFun: 'مرح', tonePersuasive: 'مقنع', toneInspiring: 'ملهم', toneLuxury: 'فخم',
     popupBack: '← رجوع', popupTitle: 'انبهرت بالنتيجة؟',
-    popupDesc: 'انتهت توليداتك المجانية الـ 3<br>اشترك الآن واحصل على <b style="color:var(--gold);">30 توليد يومياً</b>',
+    popupDesc: 'انتهت توليداتك المجانية الـ 3<br>اشترك الآن واحصل على <b style="color:var(--gold);">30 توليد يومياً</b><br><span style="color:var(--gold);font-size:11px;">📚 + مكتبة لحفظ أفضل بوستاتك</span>',
     popupPeriod: 'شهرياً — يعادل 60 ريال فقط',
     popupSubscribeBtn: '✨ اشترك الآن واحصل على كودك',
     popupHaveCode: 'لديك كود؟', popupEnterBtn: 'دخول ←', popupError: '❌ كود غير صحيح',
@@ -926,7 +930,7 @@ const i18n = {
     typePost: 'Post', typeCaption: 'Caption', typeAd: 'Ad', typeReply: 'Reply', typeStory: 'Story', typeHashtags: 'Hashtags',
     tonePro: 'Professional', toneFriendly: 'Friendly', toneFun: 'Fun', tonePersuasive: 'Persuasive', toneInspiring: 'Inspiring', toneLuxury: 'Luxury',
     popupBack: 'Back →', popupTitle: 'Amazed by the results?',
-    popupDesc: 'Your 3 free generations are up.<br>Subscribe now and get <b style="color:var(--gold);">30 generations daily</b>',
+    popupDesc: 'Your 3 free generations are up.<br>Subscribe now and get <b style="color:var(--gold);">30 generations daily</b><br><span style="color:var(--gold);font-size:11px;">📚 + Library to save your best content</span>',
     popupPeriod: 'Monthly — just $14.99',
     popupSubscribeBtn: '✨ Subscribe Now & Get Your Code',
     popupHaveCode: 'Have a code?', popupEnterBtn: 'Enter →', popupError: '❌ Invalid code',
@@ -1073,6 +1077,19 @@ function showApp() {
   updateStats();
   updateUI(currentLang);
 
+  // حدّث زر المكتبة
+  const libraryBtn = document.getElementById('libraryBtn');
+  const libraryBtnText = document.getElementById('libraryBtnText');
+  if (libraryBtn && libraryBtnText) {
+    if (localStorage.getItem('midaad_code')) {
+      libraryBtn.style.borderColor = 'rgba(201,168,76,0.3)';
+      libraryBtn.style.color = 'var(--gold)';
+      libraryBtnText.textContent = '📚 مكتبتي';
+    } else {
+      libraryBtnText.textContent = '🔒 مكتبتي';
+    }
+  }
+
   const logoutBtn = document.querySelector('.btn-logout');
   if (logoutBtn) {
     if (localStorage.getItem('midaad_code')) {
@@ -1178,9 +1195,12 @@ async function generate() {
       results.innerHTML = data.results.map((text, i) => `
         <div class="result-card">
           <div class="r-header">
-            <span class="r-num">النسخة ${i + 1}</span>
+            <span class="r-num">${currentLang === 'en' ? 'Version' : 'النسخة'} ${i + 1}</span>
             <div class="r-actions">
-              <button class="btn-copy" onclick="copyText(this, 'r${i}')">📋 نسخ</button>
+              <button class="btn-copy" onclick="saveContent('r${i}')" id="saveBtn${i}" style="${localStorage.getItem('midaad_code') ? '' : 'opacity:0.4;'}">
+                ${localStorage.getItem('midaad_code') ? '⭐ حفظ' : '🔒 حفظ'}
+              </button>
+              <button class="btn-copy" onclick="copyText(this, 'r${i}')">📋 ${currentLang === 'en' ? 'Copy' : 'نسخ'}</button>
             </div>
           </div>
           <div class="r-text" id="r${i}">${text.trim()}</div>
@@ -1578,5 +1598,137 @@ function openVideoPopup() {
 function closeVideoPopup() {
   document.getElementById('videoPopup').style.display = 'none';
   document.getElementById('tiktokFrame').src = '';
+}
+</script>
+
+<!-- LIBRARY PANEL -->
+<div id="libraryPanel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:8000;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:24px;padding:24px;max-width:480px;width:100%;margin:auto;position:relative;">
+    <div style="position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <h2 id="libraryTitle" style="font-size:16px;font-weight:900;color:var(--gold2);">📚 مكتبتي</h2>
+      <button onclick="closeLibrary()" style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:4px 12px;font-size:12px;color:var(--text3);cursor:pointer;font-family:inherit;">✕</button>
+    </div>
+    <div id="libraryContent"></div>
+  </div>
+</div>
+
+<script>
+function openLibrary() {
+  const code = localStorage.getItem('midaad_code');
+  const expiry = parseInt(localStorage.getItem('midaad_expiry') || '0');
+  const isEn = currentLang === 'en';
+
+  // لو ما عنده كود أو انتهى اشتراكه
+  if (!code || (expiry > 0 && Date.now() > expiry)) {
+    showSubscribePopup();
+    return;
+  }
+  loadLibrary();
+  document.getElementById('libraryPanel').style.display = 'flex';
+}
+
+function closeLibrary() {
+  document.getElementById('libraryPanel').style.display = 'none';
+}
+
+function getSavedItems() {
+  try {
+    const items = JSON.parse(localStorage.getItem('midaad_library') || '[]');
+    // احذف البوستات المنتهية تلقائياً
+    const valid = items.filter(i => !i.expiryDate || Date.now() < i.expiryDate);
+    if (valid.length !== items.length) {
+      localStorage.setItem('midaad_library', JSON.stringify(valid));
+    }
+    return valid;
+  } catch(e) { return []; }
+}
+
+function saveContent(id) {
+  const code = localStorage.getItem('midaad_code');
+  const expiry = parseInt(localStorage.getItem('midaad_expiry') || '0');
+
+  if (!code || (expiry > 0 && Date.now() > expiry)) {
+    showSubscribePopup();
+    return;
+  }
+
+  const text = document.getElementById(id)?.innerText;
+  if (!text) return;
+
+  const items = getSavedItems();
+  const expiryDate = expiry > 0 ? expiry : Date.now() + 30 * 24 * 60 * 60 * 1000;
+
+  const newItem = {
+    id: Date.now(),
+    text,
+    platform,
+    contentType,
+    date: new Date().toLocaleDateString('ar-SA'),
+    expiryDate
+  };
+  items.unshift(newItem);
+  if (items.length > 50) items.pop();
+  localStorage.setItem('midaad_library', JSON.stringify(items));
+
+  const btnId = 'saveBtn' + id.replace('r', '');
+  const btn = document.getElementById(btnId);
+  if (btn) {
+    btn.textContent = '✅ تم الحفظ';
+    btn.style.borderColor = 'var(--green)';
+    btn.style.color = 'var(--green)';
+    setTimeout(() => {
+      btn.textContent = '⭐ حفظ';
+      btn.style.borderColor = '';
+      btn.style.color = '';
+    }, 2000);
+  }
+}
+
+function loadLibrary() {
+  const items = getSavedItems();
+  const container = document.getElementById('libraryContent');
+  const isEn = currentLang === 'en';
+
+  if (!items.length) {
+    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text3);">
+      <div style="font-size:40px;margin-bottom:12px;">📭</div>
+      <p style="font-size:13px;">${isEn ? 'No saved content yet' : 'لا يوجد محتوى محفوظ بعد'}</p>
+      <p style="font-size:11px;margin-top:6px;color:var(--text3);">${isEn ? 'Click ⭐ Save on any generated content' : 'اضغط ⭐ حفظ على أي محتوى مولّد'}</p>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = items.map(item => {
+    const daysLeft = item.expiryDate ? Math.ceil((item.expiryDate - Date.now()) / (1000*60*60*24)) : 30;
+    const expiryColor = daysLeft <= 5 ? 'var(--red)' : 'var(--text3)';
+    return `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:10px;background:var(--gold-dim);border:1px solid var(--border2);border-radius:20px;padding:3px 10px;color:var(--gold);">${item.platform} • ${item.contentType}</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <span style="font-size:10px;color:${expiryColor};">${isEn ? `${daysLeft}d left` : `${daysLeft} يوم`}</span>
+          <button onclick="copyLibraryItem('lib${item.id}')" style="background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:10px;color:var(--text2);cursor:pointer;font-family:inherit;">📋</button>
+          <button onclick="deleteLibraryItem(${item.id})" style="background:none;border:none;font-size:14px;cursor:pointer;color:var(--text3);">🗑️</button>
+        </div>
+      </div>
+      <div id="lib${item.id}" style="font-size:12px;color:var(--text);line-height:1.7;white-space:pre-wrap;">${item.text}</div>
+    </div>`;
+  }).join('');
+}
+
+function copyLibraryItem(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText).then(() => {
+    const btn = el.previousElementSibling?.querySelector('button');
+    if (btn) { btn.textContent = '✅'; setTimeout(() => btn.textContent = '📋', 2000); }
+  });
+}
+
+function deleteLibraryItem(id) {
+  const items = getSavedItems().filter(i => i.id !== id);
+  localStorage.setItem('midaad_library', JSON.stringify(items));
+  loadLibrary();
 }
 </script>
