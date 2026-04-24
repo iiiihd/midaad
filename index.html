@@ -711,10 +711,13 @@ async function loadTickerReviews() {
       span1.style.cssText = 'font-size:12px;color:var(--text2);flex-shrink:0;';
       span1.innerHTML = `${stars(r.rating)} &nbsp;"${r.text}" &nbsp;<span style="color:var(--text3);">— ${r.job || 'عميل مِداد'}${r.city ? '، ' + r.city : ''}</span>`;
       ticker.appendChild(span1);
-      // نسخة ثانية للحلقة
       const span2 = span1.cloneNode(true);
       ticker.appendChild(span2);
     });
+    // أعد تشغيل الـ animation عشان يأخذ العناصر الجديدة
+    ticker.style.animation = 'none';
+    ticker.offsetHeight;
+    ticker.style.animation = 'ticker 50s linear infinite';
   } catch(e) {}
 }
 
