@@ -1217,7 +1217,9 @@ async function generate() {
         results.innerHTML = `<div class="result-card"><div class="r-text" style="color:var(--red)">❌ ${data.error}</div></div>`;
       }
     } else {
-      results.innerHTML = data.results.map((text, i) => `
+      const { results: postResults, isSubscribed: sub, showAnalysis: showA, analysis } = data;
+
+      results.innerHTML = postResults.map((text, i) => `
         <div class="result-card">
           <div class="r-header">
             <span class="r-num">${currentLang === 'en' ? 'Version' : 'النسخة'} ${i + 1}</span>
@@ -1229,6 +1231,7 @@ async function generate() {
             </div>
           </div>
           <div class="r-text" id="r${i}">${text.trim()}</div>
+          ${i === 0 ? renderAnalysis(showA, sub, analysis) : ''}
         </div>
       `).join('');
 
@@ -1263,6 +1266,82 @@ async function generate() {
   btn.disabled = false;
   btn.innerHTML = '✨ ولّد المحتوى الآن';
   document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderAnalysis(showA, sub, analysis) {
+  const isEn = currentLang === 'en';
+
+  if (showA && analysis) {
+    const scoreColor = analysis.score >= 70 ? 'var(--green)' : analysis.score >= 40 ? '#FCD34D' : 'var(--red)';
+    const hookLabel = isEn ? 'Hook' : 'الجذب';
+    const engLabel = isEn ? 'Engagement' : 'التفاعل';
+    const ctaLabel = isEn ? 'CTA' : 'الدعوة';
+    const improveLabel = isEn ? '✨ Improve Post' : '✨ حسّن البوست';
+    const suggestionsLabel = isEn ? '💡 Suggestions' : '💡 اقتراحات للتحسين';
+
+    return `
+    <div style="margin-top:14px;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <span style="font-size:12px;font-weight:800;color:var(--gold);">🔥 Viral Score</span>
+        <span style="font-size:22px;font-weight:900;color:${scoreColor};">${analysis.score}/100</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:10px;background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;color:var(--text2);">${hookLabel}: <b style="color:var(--text)">${analysis.hook}</b></span>
+        <span style="font-size:10px;background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;color:var(--text2);">${engLabel}: <b style="color:var(--text)">${analysis.engagement}</b></span>
+        <span style="font-size:10px;background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;color:var(--text2);">${ctaLabel}: <b style="color:var(--text)">${analysis.cta}</b></span>
+      </div>
+      ${analysis.suggestions?.length ? `
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">${suggestionsLabel}:</div>
+      <ul style="list-style:none;padding:0;margin:0 0 10px;">
+        ${analysis.suggestions.map(s => `<li style="font-size:11px;color:var(--text2);padding:3px 0;">• ${s}</li>`).join('')}
+      </ul>` : ''}
+      <button onclick="improveContent()" style="width:100%;background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;">${improveLabel}</button>
+    </div>`;
+  }
+
+  if (!showA && !sub) {
+    return `
+    <div style="margin-top:14px;background:rgba(201,168,76,0.03);border:1px solid rgba(201,168,76,0.15);border-radius:12px;padding:14px;text-align:center;">
+      <div style="font-size:20px;margin-bottom:6px;">🔒</div>
+      <div style="font-size:13px;font-weight:800;color:var(--gold);margin-bottom:4px;">${currentLang === 'en' ? 'Viral Score locked' : 'Viral Score مقفل'}</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;">${currentLang === 'en' ? 'Subscribe to unlock analysis + improvement for every post' : 'اشترك لفتح التحليل + تحسين المحتوى على كل توليد'}</div>
+      <button onclick="showSubscribePopup()" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;">${currentLang === 'en' ? '🚀 Subscribe Now' : '🚀 اشترك الآن'}</button>
+    </div>`;
+  }
+
+  return '';
+}
+
+async function improveContent() {
+  const postEl = document.getElementById('r0');
+  if (!postEl) return;
+  const originalPost = postEl.innerText;
+  const code = localStorage.getItem('midaad_code');
+  const isEn = currentLang === 'en';
+
+  const improveBtn = event.target;
+  improveBtn.disabled = true;
+  improveBtn.textContent = isEn ? '⏳ Improving...' : '⏳ جاري التحسين...';
+
+  try {
+    const res = await fetch('/api/improve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ post: originalPost, lang: currentLang, code })
+    });
+    const data = await res.json();
+    if (data.improved) {
+      postEl.innerText = data.improved;
+      improveBtn.textContent = isEn ? '✅ Improved!' : '✅ تم التحسين!';
+      setTimeout(() => {
+        improveBtn.textContent = isEn ? '✨ Improve Again' : '✨ حسّن مجدداً';
+        improveBtn.disabled = false;
+      }, 2000);
+    }
+  } catch(e) {
+    improveBtn.textContent = isEn ? '✨ Improve Post' : '✨ حسّن البوست';
+    improveBtn.disabled = false;
+  }
 }
 
 function copyText(btn, id) {
