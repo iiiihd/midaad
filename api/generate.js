@@ -5,7 +5,7 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { topic, platform, contentType, tone, count, code, deviceId, lang } = req.body;
+  const { topic, platform, contentType, tone, count, code, deviceId, lang, analyzeOnly } = req.body;
   const language = lang || 'ar';
 
   const KV_URL = process.env.KV_REST_API_URL;
@@ -78,6 +78,35 @@ module.exports = async function handler(req, res) {
     await kvSet(dailyKey, String(dailyCount + numVersions), 86400);
     isSubscribed = true;
     showAnalysis = true;
+  }
+
+  // analyzeOnly — فقط تحليل بدون توليد وبدون خصم من الحد اليومي
+  if (analyzeOnly && (isSubscribed || isVIP)) {
+    if (!topic) return res.status(400).json({ error: 'no post' });
+    try {
+      const analysisPrompt = language === 'en' ?
+        `You are a social media engagement expert. Analyze this post deeply based on real engagement patterns.
+Post: "${topic.substring(0, 500)}"
+Platform: ${platform}
+Return ONLY valid JSON, no markdown:
+{"score":<0-100>,"hook":"<weak|medium|strong>","hook_reason":"<1 sentence>","engagement":"<low|medium|high>","engagement_reason":"<1 sentence>","cta":"<weak|medium|strong>","cta_reason":"<1 sentence>","suggestions":["tip1","tip2","tip3"]}` :
+        `أنت خبير تحليل أنماط التفاعل. حلّل هذا البوست.
+البوست: "${topic.substring(0, 500)}"
+المنصة: ${platform}
+أرجع JSON فقط بدون markdown:
+{"score":<0-100>,"hook":"<ضعيف|متوسط|قوي>","hook_reason":"<جملة>","engagement":"<منخفض|متوسط|عالي>","engagement_reason":"<جملة>","cta":"<ضعيف|متوسط|قوي>","cta_reason":"<جملة>","suggestions":["نصيحة1","نصيحة2","نصيحة3"]}`;
+
+      const aRes = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENAI_KEY}` },
+        body: JSON.stringify({ model: 'gpt-4o-mini', messages: [{ role: 'user', content: analysisPrompt }], max_tokens: 350, temperature: 0.3 })
+      });
+      const aData = await aRes.json();
+      const analysis = JSON.parse(aData.choices?.[0]?.message?.content?.replace(/```json|```/g, '').trim());
+      return res.status(200).json({ results: [], isSubscribed: true, showAnalysis: true, analysis });
+    } catch(e) {
+      return res.status(500).json({ error: 'تحليل فشل' });
+    }
   }
 
   if (!topic) return res.status(400).json({ error: 'أدخل موضوعك أولاً' });
