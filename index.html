@@ -1292,7 +1292,7 @@ function renderAnalysis(showA, sub, analysis) {
       </div>`;
 
     return `
-    <div style="margin-top:14px;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:14px;padding:14px;">
+    <div class="viral-analysis" style="margin-top:14px;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:14px;padding:14px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div>
           <span style="font-size:12px;font-weight:800;color:var(--gold);">🔥 Viral Score</span>
@@ -1358,17 +1358,52 @@ async function improveContent() {
       body: JSON.stringify({ post: originalPost, lang: currentLang, code })
     });
     const data = await res.json();
-    if (data.improved) {
-      postEl.innerText = data.improved;
-      improveBtn.textContent = isEn ? '✅ Improved!' : '✅ تم التحسين!';
+    if (data.improved && data.improved.length > 0) {
+      // حدّث النص بأنيميشن
+      postEl.style.transition = 'opacity 0.3s';
+      postEl.style.opacity = '0';
       setTimeout(() => {
+        postEl.textContent = data.improved;
+        postEl.style.opacity = '1';
+      }, 200);
+
+      improveBtn.textContent = isEn ? '✅ Improved!' : '✅ تم التحسين!';
+
+      // أعد تحليل البوست المحسّن
+      setTimeout(async () => {
+        improveBtn.textContent = isEn ? '🔄 Re-analyzing...' : '🔄 إعادة التحليل...';
+        try {
+          const reRes = await fetch('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              topic: data.improved,
+              platform, contentType, tone, count: 1,
+              code, deviceId: localStorage.getItem('midaad_device'),
+              lang: currentLang, language: currentLang,
+              analyzeOnly: true
+            })
+          });
+          const reData = await reRes.json();
+          if (reData.analysis) {
+            const analysisEl = document.getElementById('r0')?.closest('.result-card')?.querySelector('.viral-analysis');
+            if (analysisEl) {
+              analysisEl.innerHTML = renderAnalysis(true, true, reData.analysis).replace('<div style="margin-top:14px;', '<div style="');
+            }
+          }
+        } catch(e) {}
         improveBtn.textContent = isEn ? '✨ Improve Again' : '✨ حسّن مجدداً';
         improveBtn.disabled = false;
-      }, 2000);
+      }, 500);
+    } else {
+      throw new Error(data.error || 'empty');
     }
   } catch(e) {
-    improveBtn.textContent = isEn ? '✨ Improve Post' : '✨ حسّن البوست';
+    improveBtn.textContent = isEn ? '❌ Try again' : '❌ حاول مرة ثانية';
     improveBtn.disabled = false;
+    setTimeout(() => {
+      improveBtn.textContent = isEn ? '✨ Improve Post' : '✨ حسّن البوست';
+    }, 2000);
   }
 }
 
