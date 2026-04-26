@@ -1272,30 +1272,58 @@ function renderAnalysis(showA, sub, analysis) {
   const isEn = currentLang === 'en';
 
   if (showA && analysis) {
-    const scoreColor = analysis.score >= 70 ? 'var(--green)' : analysis.score >= 40 ? '#FCD34D' : 'var(--red)';
-    const hookLabel = isEn ? 'Hook' : 'الجذب';
-    const engLabel = isEn ? 'Engagement' : 'التفاعل';
-    const ctaLabel = isEn ? 'CTA' : 'الدعوة';
-    const improveLabel = isEn ? '✨ Improve Post' : '✨ حسّن البوست';
-    const suggestionsLabel = isEn ? '💡 Suggestions' : '💡 اقتراحات للتحسين';
+    const score = analysis.score;
+    const scoreColor = score >= 70 ? 'var(--green)' : score >= 40 ? '#FCD34D' : 'var(--red)';
+    const scoreLabel = score >= 70 ? (isEn ? 'Excellent 🔥' : 'ممتاز 🔥') : score >= 40 ? (isEn ? 'Good 👍' : 'جيد 👍') : (isEn ? 'Needs Work ⚠️' : 'يحتاج تحسين ⚠️');
+
+    const hookIcon = analysis.hook === (isEn ? 'strong' : 'قوي') ? '🔥' : analysis.hook === (isEn ? 'medium' : 'متوسط') ? '👍' : '⚠️';
+    const engIcon = analysis.engagement === (isEn ? 'high' : 'عالي') ? '🔥' : analysis.engagement === (isEn ? 'medium' : 'متوسط') ? '👍' : '⚠️';
+    const ctaIcon = analysis.cta === (isEn ? 'strong' : 'قوي') ? '🔥' : analysis.cta === (isEn ? 'medium' : 'متوسط') ? '👍' : '⚠️';
+
+    const suggestionsHTML = sub ? `
+      <div style="margin-bottom:10px;">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px;">💡 ${isEn ? 'How to improve:' : 'كيف تحسّن:'}</div>
+        ${analysis.suggestions?.map(s => `<div style="font-size:11px;color:var(--text2);padding:4px 0;border-bottom:1px solid var(--border);">• ${s}</div>`).join('') || ''}
+      </div>
+      <button onclick="improveContent()" style="width:100%;background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;">✨ ${isEn ? 'Improve Post' : 'حسّن البوست'}</button>` :
+      `<div style="background:rgba(201,168,76,0.05);border:1px dashed rgba(201,168,76,0.3);border-radius:10px;padding:10px;text-align:center;margin-top:4px;">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px;">🔒 ${isEn ? 'Unlock improvement tips + AI enhancement' : 'افتح نصائح التحسين + تحسين بالذكاء الاصطناعي'}</div>
+        <button onclick="showSubscribePopup()" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:8px;padding:8px 20px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;">🚀 ${isEn ? 'Subscribe Now' : 'اشترك الآن'}</button>
+      </div>`;
 
     return `
-    <div style="margin-top:14px;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:14px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <span style="font-size:12px;font-weight:800;color:var(--gold);">🔥 Viral Score</span>
-        <span style="font-size:22px;font-weight:900;color:${scoreColor};">${analysis.score}/100</span>
+    <div style="margin-top:14px;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:14px;padding:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div>
+          <span style="font-size:12px;font-weight:800;color:var(--gold);">🔥 Viral Score</span>
+          <span style="font-size:11px;color:var(--text3);margin-right:6px;">${scoreLabel}</span>
+        </div>
+        <span style="font-size:26px;font-weight:900;color:${scoreColor};">${score}/100</span>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
-        <span style="font-size:10px;background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;color:var(--text2);">${hookLabel}: <b style="color:var(--text)">${analysis.hook}</b></span>
-        <span style="font-size:10px;background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;color:var(--text2);">${engLabel}: <b style="color:var(--text)">${analysis.engagement}</b></span>
-        <span style="font-size:10px;background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;color:var(--text2);">${ctaLabel}: <b style="color:var(--text)">${analysis.cta}</b></span>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--card);border-radius:10px;padding:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:11px;font-weight:700;color:var(--text);">${hookIcon} ${isEn ? 'Hook' : 'الجذب'}</span>
+            <span style="font-size:10px;color:var(--text3);">${analysis.hook}</span>
+          </div>
+          <div style="font-size:11px;color:var(--text2);">${analysis.hook_reason || ''}</div>
+        </div>
+        <div style="background:var(--card);border-radius:10px;padding:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:11px;font-weight:700;color:var(--text);">${engIcon} ${isEn ? 'Engagement' : 'التفاعل'}</span>
+            <span style="font-size:10px;color:var(--text3);">${analysis.engagement}</span>
+          </div>
+          <div style="font-size:11px;color:var(--text2);">${analysis.engagement_reason || ''}</div>
+        </div>
+        <div style="background:var(--card);border-radius:10px;padding:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:11px;font-weight:700;color:var(--text);">${ctaIcon} ${isEn ? 'CTA' : 'الدعوة'}</span>
+            <span style="font-size:10px;color:var(--text3);">${analysis.cta}</span>
+          </div>
+          <div style="font-size:11px;color:var(--text2);">${analysis.cta_reason || ''}</div>
+        </div>
       </div>
-      ${analysis.suggestions?.length ? `
-      <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">${suggestionsLabel}:</div>
-      <ul style="list-style:none;padding:0;margin:0 0 10px;">
-        ${analysis.suggestions.map(s => `<li style="font-size:11px;color:var(--text2);padding:3px 0;">• ${s}</li>`).join('')}
-      </ul>` : ''}
-      <button onclick="improveContent()" style="width:100%;background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;">${improveLabel}</button>
+      ${suggestionsHTML}
     </div>`;
   }
 
@@ -1303,9 +1331,9 @@ function renderAnalysis(showA, sub, analysis) {
     return `
     <div style="margin-top:14px;background:rgba(201,168,76,0.03);border:1px solid rgba(201,168,76,0.15);border-radius:12px;padding:14px;text-align:center;">
       <div style="font-size:20px;margin-bottom:6px;">🔒</div>
-      <div style="font-size:13px;font-weight:800;color:var(--gold);margin-bottom:4px;">${currentLang === 'en' ? 'Viral Score locked' : 'Viral Score مقفل'}</div>
-      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;">${currentLang === 'en' ? 'Subscribe to unlock analysis + improvement for every post' : 'اشترك لفتح التحليل + تحسين المحتوى على كل توليد'}</div>
-      <button onclick="showSubscribePopup()" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;">${currentLang === 'en' ? '🚀 Subscribe Now' : '🚀 اشترك الآن'}</button>
+      <div style="font-size:13px;font-weight:800;color:var(--gold);margin-bottom:4px;">${isEn ? 'Viral Score locked' : 'Viral Score مقفل'}</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;">${isEn ? 'Subscribe to unlock analysis + AI improvement on every post' : 'اشترك لفتح التحليل الذكي + تحسين المحتوى على كل توليد'}</div>
+      <button onclick="showSubscribePopup()" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;">🚀 ${isEn ? 'Subscribe Now' : 'اشترك الآن'}</button>
     </div>`;
   }
 
@@ -1836,5 +1864,7 @@ function deleteLibraryItem(id) {
   loadLibrary();
 }
 </script>
+</body>
+</html>
 </body>
 </html>
