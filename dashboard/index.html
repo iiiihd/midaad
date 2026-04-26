@@ -103,7 +103,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--text);m
       <div class="dash-brand">مِداد — Dashboard</div>
       <div class="dash-sub" id="lastUpdate">جاري التحميل...</div>
     </div>
-    <button class="btn-refresh" onclick="loadAll()">
+    <button class="btn-refresh" onclick="loadAll(this)">
       🔄 تحديث
     </button>
   </div>
@@ -207,21 +207,29 @@ document.getElementById('pinInput')?.addEventListener('keydown', e => {
   if (e.key === 'Enter') checkPin();
 });
 
-async function loadAll() {
-  document.getElementById('lastUpdate').textContent = 'آخر تحديث: ' + new Date().toLocaleTimeString('ar-SA');
-  
+async function loadAll(btn) {
+  if (btn) { btn.textContent = '⏳ جاري...'; btn.disabled = true; }
+  document.getElementById('lastUpdate').textContent = 'جاري التحميل...';
+
+  // إعادة تعيين الأقسام
+  ['subsTable','freeTable','reviewsSection','revenueSection','usageSection'].forEach(id => {
+    document.getElementById(id).innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div></div>';
+  });
+
   try {
     const data = await apiCall();
     if (data.error) { alert('خطأ: ' + data.error); return; }
-    
     renderStats(data);
     renderRevenue(data.revenue, data.activeCount);
     renderUsage(data.totalToday, data.subscribers);
     renderSubscribers(data.subscribers);
     renderFreeUsers(data.freeUsers);
     renderReviews(data.reviews);
+    document.getElementById('lastUpdate').textContent = 'آخر تحديث: ' + new Date().toLocaleTimeString('ar-SA');
   } catch(e) {
     alert('خطأ في التحميل: ' + e.message);
+  } finally {
+    if (btn) { btn.textContent = '🔄 تحديث'; btn.disabled = false; }
   }
 }
 
@@ -234,25 +242,25 @@ function renderStats(data) {
 }
 
 function renderRevenue(rev, activeCount) {
+  // نوضح إن الإيرادات من Paddle — صفر حالياً
   document.getElementById('revenueSection').innerHTML = `
-    <div class="revenue-big">$${rev.monthly}</div>
-    <div class="revenue-sub">الإيرادات الشهرية المتوقعة</div>
+    <div class="revenue-big" style="color:var(--text2);">$0.00</div>
+    <div class="revenue-sub">إيرادات Paddle الفعلية — لا يوجد مشتركون مدفوعون بعد</div>
     <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
       <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--card);border-radius:10px;">
-        <span style="font-size:12px;color:var(--text2);">المشتركون النشطون</span>
-        <span style="font-size:12px;font-weight:700;color:var(--green);">${activeCount}</span>
+        <span style="font-size:12px;color:var(--text2);">أكواد نشطة في KV</span>
+        <span style="font-size:12px;font-weight:700;color:var(--gold);">${activeCount}</span>
       </div>
       <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--card);border-radius:10px;">
         <span style="font-size:12px;color:var(--text2);">سعر الاشتراك</span>
         <span style="font-size:12px;font-weight:700;color:var(--gold);">$14.99/شهر</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--card);border-radius:10px;">
-        <span style="font-size:12px;color:var(--text2);">تكلفة OpenAI (تقريبية)</span>
-        <span style="font-size:12px;font-weight:700;color:var(--red);">~$${rev.openai}</span>
+      <div style="display:flex;justify-content:space-between;padding:8px 12px;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:10px;">
+        <span style="font-size:12px;font-weight:800;color:var(--text);">إيرادات متوقعة لو اشتركوا</span>
+        <span style="font-size:14px;font-weight:900;color:var(--gold);">$${rev.monthly}</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 12px;background:rgba(52,211,153,0.05);border:1px solid rgba(52,211,153,0.2);border-radius:10px;">
-        <span style="font-size:12px;font-weight:800;color:var(--text);">صافي الربح</span>
-        <span style="font-size:14px;font-weight:900;color:var(--green);">$${rev.net}</span>
+      <div style="padding:10px;background:rgba(248,113,113,0.05);border:1px solid rgba(248,113,113,0.2);border-radius:10px;font-size:11px;color:var(--text3);text-align:center;">
+        ⚠️ الأكواد النشطة هي أكواد اختبار — لا يوجد دفع فعلي من Paddle بعد
       </div>
     </div>`;
 }
