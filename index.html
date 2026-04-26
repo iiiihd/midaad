@@ -755,6 +755,22 @@ document.addEventListener('DOMContentLoaded', loadTickerReviews);
         </button>
       </div>
       <p id="heroFree" style="font-size:10px;color:var(--text3);margin-top:8px;text-align:center;">3 تجارب مجانية • بدون بطاقة بنكية • بدون تسجيل</p>
+
+      <!-- ميزات التطوير -->
+      <div id="heroFeatures" style="display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:5px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:20px;padding:5px 12px;">
+          <span style="font-size:12px;">🔥</span>
+          <span id="feat1" style="font-size:10px;color:var(--text2);font-weight:600;">Viral Score لكل بوست</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:20px;padding:5px 12px;">
+          <span style="font-size:12px;">✨</span>
+          <span id="feat2" style="font-size:10px;color:var(--text2);font-weight:600;">تحسين بالذكاء الاصطناعي</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:20px;padding:5px 12px;">
+          <span style="font-size:12px;">📚</span>
+          <span id="feat3" style="font-size:10px;color:var(--text2);font-weight:600;">مكتبة لحفظ المحتوى</span>
+        </div>
+      </div>
     </div>
 
     <!-- Stats -->
@@ -1016,6 +1032,13 @@ function updateUI(l) {
       logoutBtn.textContent = l === 'en' ? 'Subscribe' : 'اشترك';
     }
   }
+
+  const feat1 = document.getElementById('feat1');
+  const feat2 = document.getElementById('feat2');
+  const feat3 = document.getElementById('feat3');
+  if (feat1) feat1.textContent = l === 'en' ? 'Viral Score for every post' : 'Viral Score لكل بوست';
+  if (feat2) feat2.textContent = l === 'en' ? 'AI-powered improvement' : 'تحسين بالذكاء الاصطناعي';
+  if (feat3) feat3.textContent = l === 'en' ? 'Content library' : 'مكتبة لحفظ المحتوى';
 
   // حدّث اسم العلامة
   const brand = document.querySelector('.h-brand');
@@ -1314,39 +1337,84 @@ function renderAnalysis(showA, sub, analysis) {
         <button onclick="showSubscribePopup()" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:8px;padding:8px 20px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;">🚀 ${isEn ? 'Subscribe Now' : 'اشترك الآن'}</button>
       </div>`;
 
+    // ID فريد للأنيميشن
+    const uid = 'va_' + Date.now();
+
+    setTimeout(() => {
+      // أنيميشن النسبة
+      const scoreEl = document.getElementById(uid + '_score');
+      const barEl = document.getElementById(uid + '_bar');
+      if (!scoreEl) return;
+      let current = 0;
+      const target = score;
+      const step = Math.ceil(target / 40);
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        scoreEl.textContent = current + '/100';
+        if (barEl) barEl.style.width = (current / 100 * 100) + '%';
+        if (current >= target) clearInterval(timer);
+      }, 30);
+
+      // ظهور تدريجي للبطاقات
+      ['hook','eng','cta','sugg'].forEach((id, i) => {
+        const el = document.getElementById(uid + '_' + id);
+        if (el) setTimeout(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, 200 + i * 150);
+      });
+    }, 100);
+
     return `
-    <div class="viral-analysis" style="margin-top:14px;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:14px;padding:14px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+    <div class="viral-analysis" style="margin-top:14px;background:linear-gradient(135deg,rgba(201,168,76,0.06),rgba(201,168,76,0.02));border:1px solid rgba(201,168,76,0.25);border-radius:16px;padding:16px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <div>
-          <span style="font-size:12px;font-weight:800;color:var(--gold);">🔥 Viral Score</span>
-          <span style="font-size:11px;color:var(--text3);margin-right:6px;">${scoreLabel}</span>
+          <div style="font-size:13px;font-weight:900;color:var(--gold);letter-spacing:1px;">🔥 Viral Score</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:2px;">${scoreLabel}</div>
         </div>
-        <span style="font-size:26px;font-weight:900;color:${scoreColor};">${score}/100</span>
+        <div style="text-align:center;">
+          <div id="${uid}_score" style="font-size:30px;font-weight:900;color:${scoreColor};line-height:1;">0/100</div>
+        </div>
       </div>
+
+      <!-- Progress Bar -->
+      <div style="background:rgba(255,255,255,0.05);border-radius:20px;height:6px;margin-bottom:14px;overflow:hidden;">
+        <div id="${uid}_bar" style="height:100%;width:0%;background:linear-gradient(90deg,${scoreColor},${scoreColor}aa);border-radius:20px;transition:width 0.05s linear;"></div>
+      </div>
+
+      <!-- Cards -->
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
-        <div style="background:var(--card);border-radius:10px;padding:10px;">
+        <div id="${uid}_hook" style="background:var(--card);border-radius:12px;padding:10px;opacity:0;transform:translateY(10px);transition:all 0.4s ease;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
             <span style="font-size:11px;font-weight:700;color:var(--text);">${hookIcon} ${isEn ? 'Hook' : 'الجذب'}</span>
-            <span style="font-size:10px;color:var(--text3);">${analysis.hook}</span>
+            <span style="font-size:10px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:2px 8px;color:var(--gold);">${analysis.hook}</span>
           </div>
-          <div style="font-size:11px;color:var(--text2);">${analysis.hook_reason || ''}</div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.6;">${analysis.hook_reason || ''}</div>
         </div>
-        <div style="background:var(--card);border-radius:10px;padding:10px;">
+
+        <div id="${uid}_eng" style="background:var(--card);border-radius:12px;padding:10px;opacity:0;transform:translateY(10px);transition:all 0.4s ease;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
             <span style="font-size:11px;font-weight:700;color:var(--text);">${engIcon} ${isEn ? 'Engagement' : 'التفاعل'}</span>
-            <span style="font-size:10px;color:var(--text3);">${analysis.engagement}</span>
+            <span style="font-size:10px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:2px 8px;color:var(--gold);">${analysis.engagement}</span>
           </div>
-          <div style="font-size:11px;color:var(--text2);">${analysis.engagement_reason || ''}</div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.6;">${analysis.engagement_reason || ''}</div>
         </div>
-        <div style="background:var(--card);border-radius:10px;padding:10px;">
+
+        <div id="${uid}_cta" style="background:var(--card);border-radius:12px;padding:10px;opacity:0;transform:translateY(10px);transition:all 0.4s ease;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
             <span style="font-size:11px;font-weight:700;color:var(--text);">${ctaIcon} ${isEn ? 'CTA' : 'الدعوة'}</span>
-            <span style="font-size:10px;color:var(--text3);">${analysis.cta}</span>
+            <span style="font-size:10px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);border-radius:20px;padding:2px 8px;color:var(--gold);">${analysis.cta}</span>
           </div>
-          <div style="font-size:11px;color:var(--text2);">${analysis.cta_reason || ''}</div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.6;">${analysis.cta_reason || ''}</div>
         </div>
       </div>
-      ${suggestionsHTML}
+
+      <div id="${uid}_sugg" style="opacity:0;transform:translateY(10px);transition:all 0.4s ease;">
+        ${suggestionsHTML}
+      </div>
     </div>`;
   }
 
