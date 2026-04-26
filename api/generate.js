@@ -121,16 +121,34 @@ ${numVersions > 1 ? `اكتب هكذا:\nالنسخة 1:\n[المحتوى]\nال
     }
     if (results.length === 0) results = [text];
 
-    // Viral Score
+    // Viral Score — ذكي ومبني على أنماط التفاعل الفعلية
     let analysis = null;
     if (showAnalysis && results[0]) {
       const analysisPrompt = language === 'en' ?
-        `Analyze this social media post. Return ONLY valid JSON, no markdown:
+        `You are a social media engagement expert. Analyze this post deeply based on real engagement patterns.
 Post: "${results[0].substring(0, 500)}"
-{"score":<0-100>,"hook":"<weak|medium|strong>","engagement":"<low|medium|high>","cta":"<weak|medium|strong>","suggestions":["tip1","tip2","tip3"]}` :
-        `حلل هذا البوست. أرجع JSON صحيح فقط بدون markdown:
+Platform: ${platform}
+
+Analyze based on:
+- HOOK: Does the first line stop the scroll? Is it curiosity-driven, emotional, or controversial?
+- ENGAGEMENT: Does it invite comments, shares, saves? Does it ask questions or create debate?
+- CTA: Is the call-to-action clear, urgent, and compelling?
+- VIRAL SCORE: Based on hook strength + emotional trigger + shareability + CTA power
+
+Return ONLY valid JSON, no markdown, no explanation:
+{"score":<realistic 0-100 based on actual post quality>,"hook":"<weak|medium|strong>","hook_reason":"<1 sentence why>","engagement":"<low|medium|high>","engagement_reason":"<1 sentence why>","cta":"<weak|medium|strong>","cta_reason":"<1 sentence why>","suggestions":["<specific actionable tip 1>","<specific actionable tip 2>","<specific actionable tip 3>"]}` :
+        `أنت خبير في تحليل أنماط التفاعل على السوشيال ميديا. حلّل هذا البوست تحليلاً عميقاً مبنياً على أنماط التفاعل الحقيقية.
 البوست: "${results[0].substring(0, 500)}"
-{"score":<0-100>,"hook":"<ضعيف|متوسط|قوي>","engagement":"<منخفض|متوسط|عالي>","cta":"<ضعيف|متوسط|قوي>","suggestions":["نصيحة1","نصيحة2","نصيحة3"]}`;
+المنصة: ${platform}
+
+حلّل بناءً على:
+- الجذب (Hook): هل السطر الأول يوقف التمرير؟ هل يثير الفضول أو العاطفة أو الجدل؟
+- التفاعل: هل يدعو للتعليق والمشاركة والحفظ؟ هل يطرح سؤالاً أو نقاشاً؟
+- الدعوة للتصرف (CTA): هل الدعوة واضحة وعاجلة ومقنعة؟
+- Viral Score: مبني على قوة الجذب + المحرك العاطفي + قابلية الانتشار + قوة الـ CTA
+
+أرجع JSON صحيح فقط بدون markdown وبدون شرح:
+{"score":<رقم واقعي 0-100 مبني على جودة البوست الفعلية>,"hook":"<ضعيف|متوسط|قوي>","hook_reason":"<جملة واحدة لماذا>","engagement":"<منخفض|متوسط|عالي>","engagement_reason":"<جملة واحدة لماذا>","cta":"<ضعيف|متوسط|قوي>","cta_reason":"<جملة واحدة لماذا>","suggestions":["<نصيحة محددة وقابلة للتطبيق 1>","<نصيحة محددة 2>","<نصيحة محددة 3>"]}`;
 
       try {
         const aRes = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -146,6 +164,14 @@ Post: "${results[0].substring(0, 500)}"
         const aData = await aRes.json();
         const aText = aData.choices?.[0]?.message?.content || '';
         analysis = JSON.parse(aText.replace(/```json|```/g, '').trim());
+        
+        // سقف النسبة للمجاني — يجذب لكن ما يقنعه أنه وصل القمة
+        if (!isSubscribed && analysis && analysis.score > 65) {
+          analysis.score = Math.floor(Math.random() * 11) + 55; // 55-65
+          // خلّي الـ hook و engagement يبدوان متوسطين
+          if (analysis.hook === 'قوي' || analysis.hook === 'strong') analysis.hook = language === 'en' ? 'medium' : 'متوسط';
+          if (analysis.engagement === 'عالي' || analysis.engagement === 'high') analysis.engagement = language === 'en' ? 'medium' : 'متوسط';
+        }
       } catch(e) { analysis = null; }
     }
 
