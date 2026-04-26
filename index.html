@@ -998,6 +998,29 @@ function updateUI(l) {
   const heroWatch = document.getElementById('heroWatch');
   if (heroWatch) heroWatch.textContent = l === 'en' ? 'Watch how it works' : 'شاهد كيف يعمل';
 
+  // حدّث زر المكتبة حسب اللغة
+  const libBtnText = document.getElementById('libraryBtnText');
+  if (libBtnText) {
+    const hasCode = localStorage.getItem('midaad_code');
+    libBtnText.textContent = hasCode
+      ? (l === 'en' ? '📚 Library' : '📚 مكتبتي')
+      : (l === 'en' ? '🔒 Library' : '🔒 مكتبتي');
+  }
+
+  // حدّث زر الخروج/اشترك
+  const logoutBtn = document.querySelector('.btn-logout');
+  if (logoutBtn) {
+    if (localStorage.getItem('midaad_code')) {
+      logoutBtn.textContent = l === 'en' ? 'Logout' : 'خروج';
+    } else {
+      logoutBtn.textContent = l === 'en' ? 'Subscribe' : 'اشترك';
+    }
+  }
+
+  // حدّث اسم العلامة
+  const brand = document.querySelector('.h-brand');
+  if (brand) brand.textContent = 'مِداد';
+
   document.documentElement.dir = l === 'en' ? 'ltr' : 'rtl';
   document.getElementById('topicInput')?.setAttribute('dir', l === 'en' ? 'ltr' : 'rtl');
 
@@ -1109,9 +1132,9 @@ function showApp() {
     if (localStorage.getItem('midaad_code')) {
       libraryBtn.style.borderColor = 'rgba(201,168,76,0.3)';
       libraryBtn.style.color = 'var(--gold)';
-      libraryBtnText.textContent = '📚 مكتبتي';
+      libraryBtnText.textContent = currentLang === 'en' ? '📚 Library' : '📚 مكتبتي';
     } else {
-      libraryBtnText.textContent = '🔒 مكتبتي';
+      libraryBtnText.textContent = currentLang === 'en' ? '🔒 Library' : '🔒 مكتبتي';
     }
   }
 
