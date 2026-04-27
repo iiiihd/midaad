@@ -154,6 +154,54 @@ export default async function handler(req, res) {
       }
     }
 
+    // إلغاء أو استرداد — يوقف الكود فوراً
+    if (eventType === 'subscription.canceled' || eventType === 'transaction.refunded') {
+      const userEmail = body?.data?.customer?.email || '';
+      if (userEmail) {
+        const code = await kvGet('email_' + userEmail);
+        if (code) {
+          await kvSet('exp_' + code, String(Date.now()));
+          console.log('Canceled/Refunded — code stopped:', code);
+        }
+      }
+    }
+
+    // إلغاء الاشتراك أو استرداد — يوقف الكود فوراً
+    if (eventType === 'subscription.canceled' || eventType === 'transaction.refunded') {
+      const userEmail = body?.data?.customer?.email || '';
+      if (userEmail) {
+        const code = await kvGet('email_' + userEmail);
+        if (code) {
+          // نضبط الانتهاء على الحين عشان يوقف الكود فوراً
+          await kvSet('exp_' + code, String(Date.now()));
+          console.log('Canceled/Refunded — code stopped:', code);
+
+          // نرسل إيميل إشعار للعميل
+          try {
+            await fetch('https://api.mailjet.com/v3.1/send', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + Buffer.from(
+                  process.env.MAILJET_API_KEY + ':' + process.env.MAILJET_SECRET_KEY
+                ).toString('base64')
+              },
+              body: JSON.stringify({
+                Messages: [{
+                  From: { Email: 'noreply@midaad.app', Name: 'مِداد' },
+                  To: [{ Email: userEmail }],
+                  Subject: eventType === 'transaction.refunded' ? 'تم استرداد مبلغك — مِداد' : 'تم إلغاء اشتراكك — مِداد',
+                  TextPart: eventType === 'transaction.refunded'
+                    ? `تم استرداد مبلغك بنجاح. اشتراكك في مِداد انتهى. يسعدنا خدمتك مرة أخرى في أي وقت على midaad.vercel.app`
+                    : `تم إلغاء اشتراكك في مِداد. يمكنك الاشتراك مجدداً في أي وقت على midaad.vercel.app`
+                }]
+              })
+            });
+          } catch(e) {}
+        }
+      }
+    }
+
   } catch(e) {
     console.log('Error:', e.message);
   }
