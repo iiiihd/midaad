@@ -540,12 +540,12 @@ main{flex:1;padding:20px 16px 40px;max-width:680px;margin:0 auto;width:100%;}
 
     <div class="login-card">
       <div class="price-strip">
-        <div class="price-main">$14.99</div>
-        <div class="price-sub">اشتراك شهري — محتوى لا محدود ✨</div>
+        <div class="price-main">60 ريال</div>
+        <div class="price-sub">فقط شهرياً — يعادل $14.99 ✨</div>
       </div>
 
       <button onclick="openPaddleCheckout()" class="btn-subscribe">
-        ✨ اشترك الآن واحصل على كودك
+        ✨ اشترك الآن — 60 ريال/شهر فقط
       </button>
 
       <div class="divider">لديك كود دخول؟</div>
@@ -956,8 +956,8 @@ const i18n = {
     tonePro: 'احترافي', toneFriendly: 'ودي', toneFun: 'مرح', tonePersuasive: 'مقنع', toneInspiring: 'ملهم', toneLuxury: 'فخم',
     popupBack: '← رجوع', popupTitle: 'انبهرت بالنتيجة؟',
     popupDesc: 'انتهت توليداتك المجانية الـ 3<br>اشترك الآن واحصل على <b style="color:var(--gold);">30 توليد يومياً</b><br><span style="color:var(--gold);font-size:11px;">📚 + مكتبة لحفظ أفضل بوستاتك</span>',
-    popupPeriod: 'شهرياً — يعادل 60 ريال فقط',
-    popupSubscribeBtn: '✨ اشترك الآن واحصل على كودك',
+    popupPeriod: 'شهرياً — يعادل $14.99 فقط',
+    popupSubscribeBtn: '✨ اشترك الآن — 60 ريال/شهر',
     popupHaveCode: 'لديك كود؟', popupEnterBtn: 'دخول ←', popupError: '❌ كود غير صحيح',
     popupReviewsTitle: '⭐ ماذا يقول عملاؤنا', popupShareReview: 'شاركنا تجربتك ⭐',
     popupSubmitReview: 'إرسال التقييم ✨', popupReviewSuccess: '✅ شكراً على تقييمك!',
@@ -973,7 +973,7 @@ const i18n = {
     popupBack: 'Back →', popupTitle: 'Amazed by the results?',
     popupDesc: 'Your 3 free generations are up.<br>Subscribe now and get <b style="color:var(--gold);">30 generations daily</b><br><span style="color:var(--gold);font-size:11px;">📚 + Library to save your best content</span>',
     popupPeriod: 'Monthly — just $14.99',
-    popupSubscribeBtn: '✨ Subscribe Now & Get Your Code',
+    popupSubscribeBtn: '✨ Subscribe Now — $14.99/month',
     popupHaveCode: 'Have a code?', popupEnterBtn: 'Enter →', popupError: '❌ Invalid code',
     popupReviewsTitle: '⭐ What our users say', popupShareReview: 'Share your experience ⭐',
     popupSubmitReview: 'Submit Review ✨', popupReviewSuccess: '✅ Thank you for your review!',
@@ -1040,7 +1040,13 @@ function updateUI(l) {
   if (feat2) feat2.textContent = l === 'en' ? 'AI-powered improvement' : 'تحسين بالذكاء الاصطناعي';
   if (feat3) feat3.textContent = l === 'en' ? 'Content library' : 'مكتبة لحفظ المحتوى';
 
-  // حدّث اسم العلامة
+  // حدّث السعر حسب اللغة
+  const priceMain = document.querySelector('.price-main');
+  const priceSub = document.querySelector('.price-sub');
+  const subscribeBtn = document.querySelector('.btn-subscribe');
+  if (priceMain) priceMain.textContent = l === 'en' ? '$14.99' : '60 ريال';
+  if (priceSub) priceSub.textContent = l === 'en' ? 'Monthly subscription — unlimited content ✨' : 'فقط شهرياً — يعادل $14.99 ✨';
+  if (subscribeBtn) subscribeBtn.textContent = l === 'en' ? '✨ Subscribe Now — $14.99/month' : '✨ اشترك الآن — 60 ريال/شهر فقط';
   const brand = document.querySelector('.h-brand');
   if (brand) brand.textContent = 'مِداد';
 
@@ -1746,8 +1752,8 @@ function openPaddleCheckout() {
     <p style="font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.7;" data-i18n="popupDesc">انتهت توليداتك المجانية الـ 3<br>اشترك الآن واحصل على <b style="color:var(--gold);">30 توليد يومياً</b></p>
 
     <div style="background:var(--card);border-radius:12px;padding:12px;margin-bottom:16px;">
-      <div style="font-size:28px;font-weight:900;color:var(--gold2);">$14.99</div>
-      <div style="font-size:11px;color:var(--text3);" data-i18n="popupPeriod">شهرياً — يعادل 60 ريال فقط</div>
+      <div style="font-size:28px;font-weight:900;color:var(--gold2);">60 ريال</div>
+      <div style="font-size:11px;color:var(--text3);" data-i18n="popupPeriod">شهرياً — يعادل $14.99 فقط</div>
     </div>
 
     <button onclick="trackEvent('subscribe_click'); openPaddleCheckout();hideSubscribePopup();" style="width:100%;background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:14px;" data-i18n="popupSubscribeBtn">✨ اشترك الآن واحصل على كودك</button>
