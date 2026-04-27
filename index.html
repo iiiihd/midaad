@@ -540,12 +540,12 @@ main{flex:1;padding:20px 16px 40px;max-width:680px;margin:0 auto;width:100%;}
 
     <div class="login-card">
       <div class="price-strip">
-        <div class="price-main">60 ريال</div>
+        <div class="price-main">56 ريال</div>
         <div class="price-sub">فقط شهرياً — يعادل $14.99 ✨</div>
       </div>
 
-      <button onclick="openPaddleCheckout()" class="btn-subscribe">
-        ✨ اشترك الآن — 60 ريال/شهر فقط
+      <button onclick="showPreCheckout()" class="btn-subscribe">
+        ✨ اشترك الآن — 56 ريال/شهر فقط
       </button>
 
       <div class="divider">لديك كود دخول؟</div>
@@ -957,7 +957,7 @@ const i18n = {
     popupBack: '← رجوع', popupTitle: 'انبهرت بالنتيجة؟',
     popupDesc: 'انتهت توليداتك المجانية الـ 3<br>اشترك الآن واحصل على <b style="color:var(--gold);">30 توليد يومياً</b><br><span style="color:var(--gold);font-size:11px;">📚 + مكتبة لحفظ أفضل بوستاتك</span>',
     popupPeriod: 'شهرياً — يعادل $14.99 فقط',
-    popupSubscribeBtn: '✨ اشترك الآن — 60 ريال/شهر',
+    popupSubscribeBtn: '✨ اشترك الآن — 56 ريال/شهر',
     popupHaveCode: 'لديك كود؟', popupEnterBtn: 'دخول ←', popupError: '❌ كود غير صحيح',
     popupReviewsTitle: '⭐ ماذا يقول عملاؤنا', popupShareReview: 'شاركنا تجربتك ⭐',
     popupSubmitReview: 'إرسال التقييم ✨', popupReviewSuccess: '✅ شكراً على تقييمك!',
@@ -1044,9 +1044,9 @@ function updateUI(l) {
   const priceMain = document.querySelector('.price-main');
   const priceSub = document.querySelector('.price-sub');
   const subscribeBtn = document.querySelector('.btn-subscribe');
-  if (priceMain) priceMain.textContent = l === 'en' ? '$14.99' : '60 ريال';
+  if (priceMain) priceMain.textContent = l === 'en' ? '$14.99' : '56 ريال';
   if (priceSub) priceSub.textContent = l === 'en' ? 'Monthly subscription — unlimited content ✨' : 'فقط شهرياً — يعادل $14.99 ✨';
-  if (subscribeBtn) subscribeBtn.textContent = l === 'en' ? '✨ Subscribe Now — $14.99/month' : '✨ اشترك الآن — 60 ريال/شهر فقط';
+  if (subscribeBtn) subscribeBtn.textContent = l === 'en' ? '✨ Subscribe Now — $14.99/month' : '✨ اشترك الآن — 56 ريال/شهر فقط';
   const brand = document.querySelector('.h-brand');
   if (brand) brand.textContent = 'مِداد';
 
@@ -1730,14 +1730,16 @@ window.addEventListener('load', function() {
   }
 });
 
-function openPaddleCheckout() {
+function openPaddleCheckout(email) {
   if (typeof Paddle === 'undefined') {
     window.location.href = 'https://student-assistant.lemonsqueezy.com/checkout/buy/b4bf3efb-af6c-4e18-975c-d5425eb2b341?locale=en';
     return;
   }
-  Paddle.Checkout.open({
+  const checkoutOptions = {
     items: [{ priceId: 'pri_01kpgyf5nvhx060t5xzsn9zp7j', quantity: 1 }]
-  });
+  };
+  if (email) checkoutOptions.customer = { email };
+  Paddle.Checkout.open(checkoutOptions);
 }
 </script>
 <!-- SUBSCRIBE POPUP -->
@@ -1752,11 +1754,11 @@ function openPaddleCheckout() {
     <p style="font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.7;" data-i18n="popupDesc">انتهت توليداتك المجانية الـ 3<br>اشترك الآن واحصل على <b style="color:var(--gold);">30 توليد يومياً</b></p>
 
     <div style="background:var(--card);border-radius:12px;padding:12px;margin-bottom:16px;">
-      <div style="font-size:28px;font-weight:900;color:var(--gold2);">60 ريال</div>
+      <div style="font-size:28px;font-weight:900;color:var(--gold2);">56 ريال</div>
       <div style="font-size:11px;color:var(--text3);" data-i18n="popupPeriod">شهرياً — يعادل $14.99 فقط</div>
     </div>
 
-    <button onclick="trackEvent('subscribe_click'); openPaddleCheckout();hideSubscribePopup();" style="width:100%;background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:14px;" data-i18n="popupSubscribeBtn">✨ اشترك الآن واحصل على كودك</button>
+    <button onclick="trackEvent('subscribe_click');hideSubscribePopup();showPreCheckout();" style="width:100%;background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:14px;" data-i18n="popupSubscribeBtn">✨ اشترك الآن واحصل على كودك</button>
 
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
       <div style="flex:1;height:1px;background:var(--border);"></div>
@@ -1866,7 +1868,104 @@ function openPaddleCheckout() {
 </div>
 
 
-<!-- VIDEO POPUP -->
+<!-- PRE-CHECKOUT POPUP -->
+<div id="preCheckoutPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9500;align-items:center;justify-content:center;padding:20px;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:24px;padding:28px;max-width:380px;width:100%;position:relative;margin:auto;">
+    <div style="position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+
+    <button onclick="document.getElementById('preCheckoutPopup').style.display='none'" style="position:absolute;top:14px;right:14px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:12px;color:var(--text3);cursor:pointer;font-family:inherit;" id="preCheckoutBack">← رجوع</button>
+
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:36px;margin-bottom:8px;">✨</div>
+      <h2 id="preCheckoutTitle" style="font-size:17px;font-weight:900;color:var(--gold2);margin-bottom:6px;">أنت على وشك الاشتراك في مِداد</h2>
+    </div>
+
+    <!-- السعر -->
+    <div style="background:var(--card);border-radius:14px;padding:14px;margin-bottom:16px;text-align:center;">
+      <div id="preCheckoutPrice" style="font-size:32px;font-weight:900;color:var(--gold2);">56 ريال</div>
+      <div id="preCheckoutPriceSub" style="font-size:12px;color:var(--text3);margin-top:2px;">شهرياً — يعادل $14.99</div>
+    </div>
+
+    <!-- الضمانات -->
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.2);border-radius:10px;">
+        <span style="font-size:16px;">✅</span>
+        <span id="g1" style="font-size:12px;color:var(--text2);">بدون التزام — إلغاء في أي وقت</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.2);border-radius:10px;">
+        <span style="font-size:16px;">✅</span>
+        <span id="g2" style="font-size:12px;color:var(--text2);">استرداد كامل خلال 7 أيام</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.2);border-radius:10px;">
+        <span style="font-size:16px;">✅</span>
+        <span id="g3" style="font-size:12px;color:var(--text2);">كودك يصلك فوراً على إيميلك</span>
+      </div>
+    </div>
+
+    <!-- الإيميل -->
+    <div style="margin-bottom:12px;">
+      <label id="emailLabel" style="font-size:12px;color:var(--text2);font-weight:700;display:block;margin-bottom:6px;">📧 أدخل إيميلك عشان يصلك الكود</label>
+      <input type="email" id="preCheckoutEmail" style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:12px 16px;font-size:14px;color:var(--text);font-family:inherit;outline:none;transition:border-color .2s;" placeholder="example@email.com" dir="ltr">
+      <p id="emailError" style="display:none;color:var(--red);font-size:11px;margin-top:4px;">❌ أدخل إيميل صحيح</p>
+    </div>
+
+    <button onclick="proceedToCheckout()" id="proceedBtn" style="width:100%;background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;">
+      <span id="proceedBtnText">متابعة للدفع ←</span>
+    </button>
+
+    <div id="preCheckoutNote" style="text-align:center;font-size:10px;color:var(--text3);margin-top:10px;">🔒 دفع آمن عبر Paddle</div>
+  </div>
+</div>
+
+<script>
+function showPreCheckout() {
+  const isEn = currentLang === 'en';
+  document.getElementById('preCheckoutPopup').style.display = 'flex';
+
+  // ترجمة حسب اللغة
+  document.getElementById('preCheckoutTitle').textContent = isEn ? "You're about to subscribe to Midaad" : 'أنت على وشك الاشتراك في مِداد';
+  document.getElementById('preCheckoutPrice').textContent = isEn ? '$14.99' : '56 ريال';
+  document.getElementById('preCheckoutPriceSub').textContent = isEn ? 'per month — no commitment' : 'شهرياً — يعادل $14.99';
+  document.getElementById('g1').textContent = isEn ? 'No commitment — cancel anytime' : 'بدون التزام — إلغاء في أي وقت';
+  document.getElementById('g2').textContent = isEn ? 'Full refund within 7 days' : 'استرداد كامل خلال 7 أيام';
+  document.getElementById('g3').textContent = isEn ? 'Your code arrives instantly by email' : 'كودك يصلك فوراً على إيميلك';
+  document.getElementById('emailLabel').textContent = isEn ? '📧 Enter your email to receive your code' : '📧 أدخل إيميلك عشان يصلك الكود';
+  document.getElementById('preCheckoutEmail').placeholder = isEn ? 'example@email.com' : 'example@email.com';
+  document.getElementById('proceedBtnText').textContent = isEn ? 'Proceed to Payment →' : 'متابعة للدفع ←';
+  document.getElementById('preCheckoutNote').textContent = isEn ? '🔒 Secure payment via Paddle' : '🔒 دفع آمن عبر Paddle';
+  document.getElementById('preCheckoutBack').textContent = isEn ? '← Back' : '← رجوع';
+
+  setTimeout(() => document.getElementById('preCheckoutEmail').focus(), 300);
+}
+
+async function proceedToCheckout() {
+  const email = document.getElementById('preCheckoutEmail').value.trim();
+  const emailError = document.getElementById('emailError');
+  const btn = document.getElementById('proceedBtn');
+  const isEn = currentLang === 'en';
+
+  // تحقق من الإيميل
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    emailError.style.display = 'block';
+    return;
+  }
+  emailError.style.display = 'none';
+
+  // حفظ الإيميل وفتح Paddle
+  btn.disabled = true;
+  document.getElementById('proceedBtnText').textContent = isEn ? '⏳ Loading...' : '⏳ جاري الفتح...';
+
+  // حفظ الإيميل في localStorage عشان يُستخدم بعد الدفع
+  localStorage.setItem('midaad_pending_email', email);
+
+  document.getElementById('preCheckoutPopup').style.display = 'none';
+  trackEvent('checkout_started');
+  openPaddleCheckout(email);
+
+  btn.disabled = false;
+  document.getElementById('proceedBtnText').textContent = isEn ? 'Proceed to Payment →' : 'متابعة للدفع ←';
+}
+</script>
 <div id="videoPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;align-items:center;justify-content:center;padding:20px;">
   <div style="width:100%;max-width:340px;position:relative;">
     <button onclick="closeVideoPopup()" style="position:absolute;top:-44px;right:0;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;line-height:1;">✕</button>
