@@ -756,6 +756,14 @@ document.addEventListener('DOMContentLoaded', loadTickerReviews);
       </div>
       <p id="heroFree" style="font-size:10px;color:var(--text3);margin-top:8px;text-align:center;">3 تجارب مجانية • بدون بطاقة بنكية • بدون تسجيل</p>
 
+      <!-- عد تنازلي 7 أيام -->
+      <div id="countdownBar" style="margin-top:8px;text-align:center;">
+        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.25);border-radius:20px;padding:5px 14px;">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 1s infinite;display:inline-block;"></span>
+          <span id="countdownText" style="font-size:10px;color:var(--red);font-weight:700;"></span>
+        </div>
+      </div>
+
       <!-- زر اشتراك في الهيرو -->
       <div style="margin-top:10px;text-align:center;">
         <button id="heroSubscribeBtn" onclick="showPreCheckout()" style="background:none;border:1px solid rgba(201,168,76,0.4);border-radius:20px;padding:6px 18px;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;transition:all .2s;" onmouseover="this.style.background='rgba(201,168,76,0.1)'" onmouseout="this.style.background='none'">
@@ -927,6 +935,55 @@ let currentLang = localStorage.getItem('midaad_lang') || 'ar';
 let contentType = 'بوست';
 let tone = 'احترافي';
 let count = 1;
+
+// عد تنازلي 7 أيام
+function startCountdown() {
+  const key = 'midaad_countdown_end';
+  let endTime = parseInt(localStorage.getItem(key) || '0');
+
+  // لو ما فيه عد أو انتهى — أعد من 7 أيام
+  if (!endTime || Date.now() > endTime) {
+    endTime = Date.now() + 7 * 24 * 60 * 60 * 1000;
+    localStorage.setItem(key, String(endTime));
+  }
+
+  function update() {
+    const remaining = endTime - Date.now();
+
+    if (remaining <= 0) {
+      endTime = Date.now() + 7 * 24 * 60 * 60 * 1000;
+      localStorage.setItem(key, String(endTime));
+      return;
+    }
+
+    const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((remaining % (1000 * 60)) / 1000);
+
+    const isEn = currentLang === 'en';
+    const textEl = document.getElementById('countdownText');
+    if (!textEl) return;
+
+    let timeStr = '';
+    if (days > 0) {
+      timeStr = isEn ? `${days}d ${hours}h ${mins}m` : `${days} يوم ${hours} ساعة ${mins} دقيقة`;
+    } else if (hours > 0) {
+      timeStr = isEn ? `${hours}h ${mins}m ${secs}s` : `${hours} ساعة ${mins} دقيقة ${secs} ثانية`;
+    } else {
+      timeStr = isEn ? `${mins}m ${secs}s` : `${mins} دقيقة ${secs} ثانية`;
+    }
+
+    textEl.innerHTML = isEn
+      ? `🎁 Free trial ends in: <b>${timeStr}</b>`
+      : `🎁 التجربة المجانية تنتهي خلال: <b>${timeStr}</b>`;
+  }
+
+  update();
+  setInterval(update, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', startCountdown);
 
 function toggleTooltip(id) {
   ['tip1','tip2','tip3'].forEach(t => {
