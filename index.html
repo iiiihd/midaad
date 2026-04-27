@@ -756,19 +756,46 @@ document.addEventListener('DOMContentLoaded', loadTickerReviews);
       </div>
       <p id="heroFree" style="font-size:10px;color:var(--text3);margin-top:8px;text-align:center;">3 تجارب مجانية • بدون بطاقة بنكية • بدون تسجيل</p>
 
+      <!-- زر اشتراك في الهيرو -->
+      <div style="margin-top:10px;text-align:center;">
+        <button id="heroSubscribeBtn" onclick="showPreCheckout()" style="background:none;border:1px solid rgba(201,168,76,0.4);border-radius:20px;padding:6px 18px;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;transition:all .2s;" onmouseover="this.style.background='rgba(201,168,76,0.1)'" onmouseout="this.style.background='none'">
+          ✨ اشترك الآن — 56 ريال/شهر
+        </button>
+      </div>
+
       <!-- ميزات التطوير -->
       <div id="heroFeatures" style="display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap;">
-        <div style="display:flex;align-items:center;gap:5px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:20px;padding:5px 12px;">
+        <div style="position:relative;display:inline-flex;align-items:center;gap:5px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:20px;padding:5px 12px;">
           <span style="font-size:12px;">🔥</span>
           <span id="feat1" style="font-size:10px;color:var(--text2);font-weight:600;">Viral Score لكل بوست</span>
+          <button onclick="toggleTooltip('tip1')" style="background:rgba(201,168,76,0.15);border:none;border-radius:50%;width:14px;height:14px;font-size:8px;color:var(--gold);cursor:pointer;font-weight:900;line-height:14px;padding:0;">?</button>
+          <div id="tip1" style="display:none;position:absolute;bottom:130%;right:50%;transform:translateX(50%);background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:10px 12px;width:200px;font-size:11px;color:var(--text2);line-height:1.6;z-index:100;text-align:right;">
+            <div style="font-weight:800;color:var(--gold);margin-bottom:4px;">🔥 Viral Score</div>
+            <span id="tip1text">يحلل بوستك ويعطيك نسبة انتشاره من 100 — كلما ارتفعت النسبة كلما وصل بوستك لناس أكثر ✨</span>
+            <div style="position:absolute;bottom:-5px;right:50%;transform:translateX(50%);width:8px;height:8px;background:var(--card2);border-left:1px solid var(--border2);border-bottom:1px solid var(--border2);transform:translateX(50%) rotate(-45deg);"></div>
+          </div>
         </div>
-        <div style="display:flex;align-items:center;gap:5px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:20px;padding:5px 12px;">
+
+        <div style="position:relative;display:inline-flex;align-items:center;gap:5px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:20px;padding:5px 12px;">
           <span style="font-size:12px;">✨</span>
           <span id="feat2" style="font-size:10px;color:var(--text2);font-weight:600;">تحسين بالذكاء الاصطناعي</span>
+          <button onclick="toggleTooltip('tip2')" style="background:rgba(201,168,76,0.15);border:none;border-radius:50%;width:14px;height:14px;font-size:8px;color:var(--gold);cursor:pointer;font-weight:900;line-height:14px;padding:0;">?</button>
+          <div id="tip2" style="display:none;position:absolute;bottom:130%;right:50%;transform:translateX(50%);background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:10px 12px;width:200px;font-size:11px;color:var(--text2);line-height:1.6;z-index:100;text-align:right;">
+            <div style="font-weight:800;color:var(--gold);margin-bottom:4px;">✨ تحسين ذكي</div>
+            <span id="tip2text">بضغطة واحدة يحسّن البوست — يقوي الجذب، يوضح الدعوة، ويرفع نسبة التفاعل تلقائياً 🚀</span>
+            <div style="position:absolute;bottom:-5px;right:50%;transform:translateX(50%);width:8px;height:8px;background:var(--card2);border-left:1px solid var(--border2);border-bottom:1px solid var(--border2);transform:translateX(50%) rotate(-45deg);"></div>
+          </div>
         </div>
-        <div style="display:flex;align-items:center;gap:5px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:20px;padding:5px 12px;">
+
+        <div style="position:relative;display:inline-flex;align-items:center;gap:5px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:20px;padding:5px 12px;">
           <span style="font-size:12px;">📚</span>
           <span id="feat3" style="font-size:10px;color:var(--text2);font-weight:600;">مكتبة لحفظ المحتوى</span>
+          <button onclick="toggleTooltip('tip3')" style="background:rgba(201,168,76,0.15);border:none;border-radius:50%;width:14px;height:14px;font-size:8px;color:var(--gold);cursor:pointer;font-weight:900;line-height:14px;padding:0;">?</button>
+          <div id="tip3" style="display:none;position:absolute;bottom:130%;right:50%;transform:translateX(50%);background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:10px 12px;width:200px;font-size:11px;color:var(--text2);line-height:1.6;z-index:100;text-align:right;">
+            <div style="font-weight:800;color:var(--gold);margin-bottom:4px;">📚 المكتبة</div>
+            <span id="tip3text">احفظ أفضل بوستاتك وارجع لها في أي وقت — منظّمة حسب المنصة والنوع 📁</span>
+            <div style="position:absolute;bottom:-5px;right:50%;transform:translateX(50%);width:8px;height:8px;background:var(--card2);border-left:1px solid var(--border2);border-bottom:1px solid var(--border2);transform:translateX(50%) rotate(-45deg);"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -900,6 +927,22 @@ let currentLang = localStorage.getItem('midaad_lang') || 'ar';
 let contentType = 'بوست';
 let tone = 'احترافي';
 let count = 1;
+
+function toggleTooltip(id) {
+  ['tip1','tip2','tip3'].forEach(t => {
+    if (t !== id) document.getElementById(t).style.display = 'none';
+  });
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  setTimeout(() => {
+    document.addEventListener('click', function close(e) {
+      if (!e.target.closest('#'+id) && !e.target.onclick?.toString().includes(id)) {
+        el.style.display = 'none';
+        document.removeEventListener('click', close);
+      }
+    });
+  }, 100);
+}
 
 function trackEvent(name) {
   try { window.va && window.va('event', { name }); } catch(e) {}
@@ -1033,7 +1076,15 @@ function updateUI(l) {
     }
   }
 
-  const feat1 = document.getElementById('feat1');
+  const tip1text = document.getElementById('tip1text');
+  const tip2text = document.getElementById('tip2text');
+  const tip3text = document.getElementById('tip3text');
+  if (tip1text) tip1text.textContent = l === 'en' ? 'Analyzes your post and gives it a virality score out of 100 — the higher the score, the more people it reaches ✨' : 'يحلل بوستك ويعطيك نسبة انتشاره من 100 — كلما ارتفعت النسبة كلما وصل بوستك لناس أكثر ✨';
+  if (tip2text) tip2text.textContent = l === 'en' ? 'One click to improve your post — stronger hook, clearer CTA, and higher engagement automatically 🚀' : 'بضغطة واحدة يحسّن البوست — يقوي الجذب، يوضح الدعوة، ويرفع نسبة التفاعل تلقائياً 🚀';
+  if (tip3text) tip3text.textContent = l === 'en' ? 'Save your best posts and access them anytime — organized by platform and content type 📁' : 'احفظ أفضل بوستاتك وارجع لها في أي وقت — منظّمة حسب المنصة والنوع 📁';
+
+  const heroSubscribeBtn = document.getElementById('heroSubscribeBtn');
+  if (heroSubscribeBtn) heroSubscribeBtn.textContent = l === 'en' ? '✨ Subscribe Now — $14.99/month' : '✨ اشترك الآن — 56 ريال/شهر';
   const feat2 = document.getElementById('feat2');
   const feat3 = document.getElementById('feat3');
   if (feat1) feat1.textContent = l === 'en' ? 'Viral Score for every post' : 'Viral Score لكل بوست';
