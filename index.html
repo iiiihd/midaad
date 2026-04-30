@@ -744,15 +744,22 @@ document.addEventListener('DOMContentLoaded', loadTickerReviews);
       <h1 id="heroTitle" style="font-size:16px;font-weight:900;color:var(--gold2);margin-bottom:4px;line-height:1.5;text-align:center;">اكتب موضوعك ← احصل على بوست احترافي في ثوانٍ</h1>
       <p id="heroSub" style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7;text-align:center;">6 منصات • 6 أنواع محتوى • عربي وإنجليزي</p>
       
-      <div style="display:flex;gap:8px;justify-content:center;">
-        <button id="heroCTA" onclick="trackEvent('hero_try'); tryExample();" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-          <span id="heroCTAText">جرّب مثالاً مجاناً</span>
+      <div style="display:flex;gap:8px;justify-content:center;flex-direction:column;align-items:center;">
+        <!-- زر التجربة — الأكبر والأبرز -->
+        <button id="heroCTA" onclick="trackEvent('hero_try'); tryExample();" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#080810;border:none;border-radius:12px;padding:14px 28px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(201,168,76,0.3);width:100%;justify-content:center;max-width:300px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          <span id="heroCTAText">جرّب مثالاً مجاناً — بدون تسجيل</span>
         </button>
-        <button onclick="window.open('https://youtube.com/shorts/f0cN_oRu-wI','_blank'); trackEvent('watch_video');" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--text2);display:flex;align-items:center;gap:6px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          <span id="heroWatch">شاهد كيف يعمل</span>
-        </button>
+        <!-- زر الفيديو + الاشتراك صغيرين -->
+        <div style="display:flex;gap:8px;width:100%;max-width:300px;">
+          <button onclick="window.open('https://youtube.com/shorts/f0cN_oRu-wI','_blank'); trackEvent('watch_video');" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--text3);display:flex;align-items:center;justify-content:center;gap:5px;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span id="heroWatch">شاهد كيف يعمل</span>
+          </button>
+          <button id="heroSubscribeBtn" onclick="showPreCheckout()" style="flex:1;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;">
+            ✨ اشترك — 56 ريال
+          </button>
+        </div>
       </div>
       <p id="heroFree" style="font-size:10px;color:var(--text3);margin-top:8px;text-align:center;">3 تجارب مجانية • بدون بطاقة بنكية • بدون تسجيل</p>
 
@@ -762,13 +769,6 @@ document.addEventListener('DOMContentLoaded', loadTickerReviews);
           <span style="width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 1s infinite;display:inline-block;"></span>
           <span id="countdownText" style="font-size:10px;color:var(--red);font-weight:700;"></span>
         </div>
-      </div>
-
-      <!-- زر اشتراك في الهيرو -->
-      <div style="margin-top:10px;text-align:center;">
-        <button id="heroSubscribeBtn" onclick="showPreCheckout()" style="background:none;border:1px solid rgba(201,168,76,0.4);border-radius:20px;padding:6px 18px;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;transition:all .2s;" onmouseover="this.style.background='rgba(201,168,76,0.1)'" onmouseout="this.style.background='none'">
-          ✨ اشترك الآن — 56 ريال/شهر
-        </button>
       </div>
 
       <!-- ميزات التطوير -->
@@ -1109,7 +1109,7 @@ function updateUI(l) {
   if (heroTitle) heroTitle.textContent = l === 'en' ? 'Type your topic → Pro content in seconds' : 'اكتب موضوعك ← احصل على بوست احترافي في ثوانٍ';
   if (heroSub) heroSub.textContent = l === 'en' ? '6 Platforms • 6 Content Types • Arabic & English' : '6 منصات • 6 أنواع محتوى • عربي وإنجليزي';
   const heroCTAText = document.getElementById('heroCTAText');
-  if (heroCTAText) heroCTAText.textContent = l === 'en' ? 'Try an Example Free' : 'جرّب مثالاً مجاناً';
+  if (heroCTAText) heroCTAText.textContent = l === 'en' ? 'Try Free — No Signup' : 'جرّب مثالاً مجاناً — بدون تسجيل';
   if (heroFree) heroFree.textContent = l === 'en' ? '3 free trials • No credit card • No signup' : '3 تجارب مجانية • بدون بطاقة بنكية • بدون تسجيل';
   const heroWatch = document.getElementById('heroWatch');
   if (heroWatch) heroWatch.textContent = l === 'en' ? 'Watch how it works' : 'شاهد كيف يعمل';
@@ -1141,7 +1141,7 @@ function updateUI(l) {
   if (tip3text) tip3text.textContent = l === 'en' ? 'Save your best posts and access them anytime — organized by platform and content type 📁' : 'احفظ أفضل بوستاتك وارجع لها في أي وقت — منظّمة حسب المنصة والنوع 📁';
 
   const heroSubscribeBtn = document.getElementById('heroSubscribeBtn');
-  if (heroSubscribeBtn) heroSubscribeBtn.textContent = l === 'en' ? '✨ Subscribe Now — $14.99/month' : '✨ اشترك الآن — 56 ريال/شهر';
+  if (heroSubscribeBtn) heroSubscribeBtn.textContent = l === 'en' ? '✨ Subscribe — $14.99' : '✨ اشترك — 56 ريال';
   const feat2 = document.getElementById('feat2');
   const feat3 = document.getElementById('feat3');
   if (feat1) feat1.textContent = l === 'en' ? 'Viral Score for every post' : 'Viral Score لكل بوست';
@@ -2021,7 +2021,13 @@ function openPaddleCheckout(email) {
       <span id="proceedBtnText">متابعة للدفع ←</span>
     </button>
 
-    <div id="preCheckoutNote" style="text-align:center;font-size:10px;color:var(--text3);margin-top:10px;">🔒 دفع آمن عبر Paddle</div>
+    <!-- تلميح كود الخصم -->
+    <div style="margin-top:10px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.25);border-radius:12px;padding:10px 12px;text-align:center;">
+      <div style="font-size:11px;color:#C4B5FD;font-weight:700;margin-bottom:4px;">🎁 عندك كود خصم؟</div>
+      <div id="discountHint" style="font-size:10px;color:var(--text3);line-height:1.6;">بعد الضغط على "متابعة" — ابحث عن خانة <b style="color:#C4B5FD;">"أضف حَسماً"</b> في صفحة الدفع واكتب كودك هناك ✅</div>
+    </div>
+
+    <div id="preCheckoutNote" style="text-align:center;font-size:10px;color:var(--text3);margin-top:8px;">🔒 دفع آمن عبر Paddle</div>
   </div>
 </div>
 
@@ -2041,6 +2047,10 @@ function showPreCheckout() {
   document.getElementById('preCheckoutEmail').placeholder = isEn ? 'example@email.com' : 'example@email.com';
   document.getElementById('proceedBtnText').textContent = isEn ? 'Proceed to Payment →' : 'متابعة للدفع ←';
   document.getElementById('preCheckoutNote').textContent = isEn ? '🔒 Secure payment via Paddle' : '🔒 دفع آمن عبر Paddle';
+  const discountHint = document.getElementById('discountHint');
+  if (discountHint) discountHint.innerHTML = isEn 
+    ? `After clicking "Proceed" — look for <b style="color:#C4B5FD;">"Add a discount"</b> in the checkout page and enter your code there ✅`
+    : `بعد الضغط على "متابعة" — ابحث عن خانة <b style="color:#C4B5FD;">"أضف حَسماً"</b> في صفحة الدفع واكتب كودك هناك ✅`;
   document.getElementById('preCheckoutBack').textContent = isEn ? '← Back' : '← رجوع';
 
   setTimeout(() => document.getElementById('preCheckoutEmail').focus(), 300);
